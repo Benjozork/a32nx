@@ -703,7 +703,11 @@ var Airbus_FMA;
         IsActive_LVRCLB() {
             const thrustReductionAltitude = Simplane.getThrustReductionAltitude();
 
-            if (Airbus_FMA.CurrentPlaneState.radioAltitude > thrustReductionAltitude) {
+            if (!thrustReductionAltitude) {
+                return false;
+            }
+
+            if (Simplane.getAltitude() > thrustReductionAltitude) {
                 if (Airbus_FMA.CurrentPlaneState.flightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
                     return Airbus_FMA.CurrentPlaneState.highestThrottleDetent > ThrottleMode.CLIMB;
                 } else if (Airbus_FMA.CurrentPlaneState.flightPhase === FlightPhase.FLIGHT_PHASE_GOAROUND) {
