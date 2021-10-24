@@ -246,6 +246,7 @@ interface SymbolMarkerProps {
 
 const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constraints, length, direction, radials, radii, mapParams }) => {
     let colour = 'White';
+    let shadow = true;
     // todo airport as well if in flightplan
     if (type & NdSymbolTypeFlags.Runway) {
         colour = 'White';
@@ -257,6 +258,7 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
         colour = 'Green';
     } else if (type & NdSymbolTypeFlags.EfisOption) {
         colour = 'Magenta';
+        shadow = false;
     }
 
     const elements: JSX.Element[] = [];
@@ -370,7 +372,7 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
 
     if (showIdent) {
         elements.push(
-            <text x={15} y={-6} fontSize={20} className={`${colour} shadow`}>
+            <text x={15} y={-6} fontSize={20} className={`${colour}${shadow ? ' shadow' : ''}`}>
                 {ident}
             </text>,
         );
