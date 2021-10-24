@@ -61,7 +61,7 @@ const VorInfo: React.FC<{index: 1 | 2}> = ({ index }) => {
             {(vorAvailable && (
                 <path
                     d={path}
-                    strokeWidth={2.6}
+                    strokeWidth={2}
                     className="White"
                     strokeLinejoin="round"
                     strokeLinecap="round"
@@ -99,7 +99,7 @@ const AdfInfo: React.FC<{index: 1 | 2}> = ({ index }) => {
         <g className="GtLayer">
             <path
                 d={path}
-                strokeWidth={2.6}
+                strokeWidth={2}
                 className="Green"
                 strokeLinejoin="round"
                 strokeLinecap="round"
