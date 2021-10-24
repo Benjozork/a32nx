@@ -63,6 +63,8 @@ export const PlanMode: FC<PlanModeProps> = ({ symbols, adirsAlign, rangeSetting,
 
     return (
         <>
+            <Overlay rangeSetting={rangeSetting} />
+
             <g id="map" clipPath="url(#plan-mode-map-clip)" visibility={mapHidden ? 'hidden' : 'visible'}>
                 <FlightPlan
                     x={384}
@@ -83,8 +85,6 @@ export const PlanMode: FC<PlanModeProps> = ({ symbols, adirsAlign, rangeSetting,
                 />
                 {tmpFplan}
             </g>
-
-            <Overlay rangeSetting={rangeSetting} />
 
             {adirsAlign && !mapHidden && (
                 <Plane location={ppos} heading={trueHeading} mapParams={mapParams} />

@@ -76,6 +76,16 @@ export const ArcMode: React.FC<ArcModeProps> = ({ symbols, adirsAlign, rangeSett
         }
         return (
             <>
+                <Overlay
+                    heading={heading}
+                    track={track}
+                    rangeSetting={rangeSetting}
+                    _side={side}
+                    tcasMode={tcasMode}
+                    selectedHeading={selectedHeading}
+                    ilsCourse={ilsCourse}
+                    lsDisplayed={lsDisplayed}
+                />
                 <g id="map" clipPath="url(#arc-mode-map-clip)">
                     <g visibility={mapHidden ? 'hidden' : 'visible'}>
                         <FlightPlan
@@ -105,16 +115,6 @@ export const ArcMode: React.FC<ArcModeProps> = ({ symbols, adirsAlign, rangeSett
                     <RadioNeedle index={1} side={side} displayMode={Mode.ARC} centreHeight={620} />
                     <RadioNeedle index={2} side={side} displayMode={Mode.ARC} centreHeight={620} />
                 </g>
-                <Overlay
-                    heading={heading}
-                    track={track}
-                    rangeSetting={rangeSetting}
-                    _side={side}
-                    tcasMode={tcasMode}
-                    selectedHeading={selectedHeading}
-                    ilsCourse={ilsCourse}
-                    lsDisplayed={lsDisplayed}
-                />
                 <ToWaypointIndicator info={flightPlanManager.getCurrentFlightPlan().computeActiveWaypointStatistics(ppos)} />
                 <ApproachMessage info={flightPlanManager.getAirportApproach()} flightPhase={fmgcFlightPhase} />
                 <Plane />

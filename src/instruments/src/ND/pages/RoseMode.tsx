@@ -77,6 +77,17 @@ export const RoseMode: FC<RoseModeProps> = ({ symbols, adirsAlign, rangeSetting,
         }
         return (
             <>
+                <Overlay
+                    heading={heading}
+                    track={track}
+                    rangeSetting={rangeSetting}
+                    tcasMode={tcasMode}
+                    displayMode={mode}
+                    selectedHeading={selectedHeading}
+                    ilsCourse={ilsCourse}
+                    lsDisplayed={lsDisplayed}
+                />
+
                 <g id="map" clipPath="url(#rose-mode-map-clip)">
                     { mode === Mode.ROSE_NAV && (
                         <g visibility={mapHidden ? 'hidden' : 'visible'}>
@@ -108,16 +119,6 @@ export const RoseMode: FC<RoseModeProps> = ({ symbols, adirsAlign, rangeSetting,
                     <RadioNeedle index={1} side={side} displayMode={mode} centreHeight={384} />
                     <RadioNeedle index={2} side={side} displayMode={mode} centreHeight={384} />
                 </g>
-                <Overlay
-                    heading={heading}
-                    track={track}
-                    rangeSetting={rangeSetting}
-                    tcasMode={tcasMode}
-                    displayMode={mode}
-                    selectedHeading={selectedHeading}
-                    ilsCourse={ilsCourse}
-                    lsDisplayed={lsDisplayed}
-                />
 
                 { mode === Mode.ROSE_VOR && <VorCaptureOverlay heading={magHeading} side={side} /> }
 
