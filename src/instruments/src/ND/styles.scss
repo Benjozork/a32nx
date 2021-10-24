@@ -148,6 +148,22 @@ path.rounded {
   stroke-linejoin: round;
 }
 
+text.shadow {
+  text-shadow:
+    -0.1px -0.1px 0 $display-background,
+    0.1px -0.1px 0 $display-background,
+    -0.1px 0.1px 0 $display-background,
+    0.1px 0.1px 0 $display-background;
+}
+
+circle.shadow,
+line.shadow,
+path.shadow,
+rect.shadow {
+  stroke: $display-background;
+  fill: none;
+}
+
 .chrono {
   font-family: "NDChrono", monospace !important;
 }

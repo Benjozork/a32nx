@@ -55,24 +55,18 @@ export const FlightPlan: FC<FlightPathProps> = memo(({ x = 0, y = 0, symbols, fl
         return null;
     }
 
-    let flightPath: JSX.Element | null = null;
+    let flightPath: string = '';
     if (geometry) {
-        switch (type) {
-        case FlightPlanType.Temp:
-            flightPath = <path d={makePathFromGeometry(geometry, mapParams)} className="Yellow" strokeWidth={3} fill="none" strokeDasharray="15 10" />;
-            break;
-        case FlightPlanType.Dashed:
-            flightPath = <path d={makePathFromGeometry(geometry, mapParams)} stroke="#00ff00" strokeWidth={3} fill="none" strokeDasharray="15 10" />;
-            break;
-        default:
-            flightPath = <path d={makePathFromGeometry(geometry, mapParams)} stroke="#00ff00" strokeWidth={2} fill="none" />;
-            break;
-        }
+        flightPath = makePathFromGeometry(geometry, mapParams);
+    }
     }
 
     return (
         <Layer x={x} y={y}>
-            {flightPath}
+            <g id="flight-path">
+                <path d={flightPath} className="shadow" strokeWidth={2.5} fill="none" strokeDasharray="15 10" />
+                <path d={flightPath} className={type === FlightPlanType.Temp ? "Yellow" : "Green"} strokeWidth={2} fill="none" strokeDasharray={type === FlightPlanType.Nav ? "" : "15 10"} />
+            </g>
             {symbols.map((symbol) => {
                 const position = mapParams.coordinatesToXYy(symbol.location);
 
@@ -113,6 +107,8 @@ export const FlightPlan: FC<FlightPathProps> = memo(({ x = 0, y = 0, symbols, fl
 
 const VorMarker: FC<{ colour: string }> = ({ colour }) => (
     <>
+        <line x1={0} x2={0} y1={-15} y2={15} className="shadow" strokeWidth={2.5} />
+        <line x1={-15} x2={15} y1={0} y2={0} className="shadow" strokeWidth={2.5} />
         <line x1={0} x2={0} y1={-15} y2={15} className={colour} strokeWidth={2} />
         <line x1={-15} x2={15} y1={0} y2={0} className={colour} strokeWidth={2} />
     </>
@@ -120,6 +116,11 @@ const VorMarker: FC<{ colour: string }> = ({ colour }) => (
 
 const VorDmeMarker: FC<{ colour: string }> = ({ colour }) => (
     <>
+        <circle r={7} className="shadow" strokeWidth={2.5} />
+        <line x1={0} x2={0} y1={-15} y2={-7} className="shadow" strokeWidth={2.5} />
+        <line x1={0} x2={0} y1={15} y2={7} className="shadow" strokeWidth={2.5} />
+        <line x1={-15} x2={-7} y1={0} y2={0} className="shadow" strokeWidth={2.5} />
+        <line x1={15} x2={7} y1={0} y2={0} className="shadow" strokeWidth={2.5} />
         <circle r={7} className={colour} strokeWidth={2} />
         <line x1={0} x2={0} y1={-15} y2={-7} className={colour} strokeWidth={2} />
         <line x1={0} x2={0} y1={15} y2={7} className={colour} strokeWidth={2} />
@@ -130,24 +131,31 @@ const VorDmeMarker: FC<{ colour: string }> = ({ colour }) => (
 
 const DmeMarker: FC<{ colour: string }> = ({ colour }) => (
     <>
+        <circle r={7} className="shadow" strokeWidth={2.5} />
         <circle r={7} className={colour} strokeWidth={2} />
     </>
 );
 
 const NdbMarker: FC<{ colour: string }> = ({ colour }) => (
     <>
+        <path d="M-10,10 L0,-10 L10,10 L-10,10" className="shadow" strokeWidth={2.5} />
         <path d="M-10,10 L0,-10 L10,10 L-10,10" className={colour} strokeWidth={2} />
     </>
 );
 
 const WaypointMarker: FC<{ colour: string }> = ({ colour }) => (
     <>
+        <rect x={-4.5} y={-4.5} width={9} height={9} className="shadow" strokeWidth={2.5} transform="rotate(45 0 0)" />
         <rect x={-4.5} y={-4.5} width={9} height={9} className={colour} strokeWidth={2} transform="rotate(45 0 0)" />
     </>
 );
 
 const AirportMarker: FC<{ colour: string }> = ({ colour }) => (
     <>
+        <line x1={0} x2={0} y1={-15} y2={15} className="shadow" strokeWidth={2.5} />
+        <line x1={0} x2={0} y1={-15} y2={15} className="shadow" strokeWidth={2.5} transform="rotate(45)" />
+        <line x1={-15} x2={15} y1={0} y2={0} className="shadow" strokeWidth={2.5} />
+        <line x1={-15} x2={15} y1={0} y2={0} className="shadow" strokeWidth={2.5} transform="rotate(45)" />
         <line x1={0} x2={0} y1={-15} y2={15} className={colour} strokeWidth={2} />
         <line x1={0} x2={0} y1={-15} y2={15} className={colour} strokeWidth={2} transform="rotate(45)" />
         <line x1={-15} x2={15} y1={0} y2={0} className={colour} strokeWidth={2} />
@@ -161,10 +169,10 @@ const RunwayIdent: FC<{ ident: string, rotation: number }> = ({ ident, rotation 
 
     return (
         <g transform={`rotate(${-rotation} 40 -20)`}>
-            <text x={40} y={-30} fontSize={20} textAnchor="middle" alignmentBaseline="central">
+            <text x={40} y={-30} fontSize={20} className="shadow" textAnchor="middle" alignmentBaseline="central">
                 {airportIdent}
             </text>
-            <text x={40} y={-10} fontSize={20} textAnchor="middle" alignmentBaseline="central">
+            <text x={40} y={-10} fontSize={20} className="shadow" textAnchor="middle" alignmentBaseline="central">
                 {runwayIdent.padEnd(4, '\xa0')}
             </text>
         </g>
@@ -185,6 +193,8 @@ const RunwayMarkerClose: FC<RunwayMarkerProps> = memo(({ ident, mapParams, direc
 
     return (
         <g transform={`rotate(${rotation})`} className="White">
+            <line x1={-5} x2={-5} y1={0} y2={-lengthPx} className="shadow" strokeWidth={2.5} />
+            <line x1={5} x2={5} y1={0} y2={-lengthPx} className="shadow" strokeWidth={2.5} />
             <line x1={-5} x2={-5} y1={0} y2={-lengthPx} strokeWidth={2} />
             <line x1={5} x2={5} y1={0} y2={-lengthPx} strokeWidth={2} />
             <RunwayIdent ident={ident} rotation={rotation} />
@@ -199,6 +209,7 @@ const RunwayMarkerFar: FC<Omit<RunwayMarkerProps, 'lengthPx'>> = memo(({ ident, 
 
     return (
         <g transform={`rotate(${rotation})`} className="White">
+            <rect x={-5} y={-25} width={10} height={25} className="shadow" strokeWidth={2.5} />
             <rect x={-5} y={-25} width={10} height={25} strokeWidth={2} />
             <RunwayIdent ident={ident} rotation={rotation} />
         </g>
@@ -242,10 +253,18 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
                 elements.push(
                     <path
                         d={`m-${radiusPx},0 a${radiusPx},${radiusPx} 0 1,0 ${radiusPx * 2},0 a${radiusPx},${radiusPx} 0 1,0 -${radiusPx * 2},0`}
+                        strokeWidth={2.5}
+                        className="shadow"
+                        strokeDasharray="15 10"
+                    />
+                );
+                elements.push(
+                    <path
+                        d={`m-${radiusPx},0 a${radiusPx},${radiusPx} 0 1,0 ${radiusPx * 2},0 a${radiusPx},${radiusPx} 0 1,0 -${radiusPx * 2},0`}
                         strokeWidth={2}
                         className="Cyan"
                         strokeDasharray="15 10"
-                    />,
+                    />
                 );
             }
         }
@@ -255,6 +274,7 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
                 // TODO how long should a piece of string be?
                 const x2 = Math.sin(rotation) * 9000;
                 const y2 = -Math.cos(rotation) * 9000;
+                elements.push(<line x2={x2} y2={y2} strokeWidth={2.5} className="shadow" strokeDasharray="15 10" />);
                 elements.push(<line x2={x2} y2={y2} strokeWidth={2} className="Cyan" strokeDasharray="15 10" />);
             }
         }
@@ -271,7 +291,7 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
     if (constraints) {
         let constraintY = -6;
         elements.push(...constraints.map((t) => (
-            <text x={15} y={constraintY += 20} className="Magenta" fontSize={20}>{t}</text>
+            <text x={15} y={constraintY += 20} className="Magenta shadow" fontSize={20}>{t}</text>
         )));
     }
 
@@ -313,34 +333,37 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
         showIdent = false;
         elements.push(
             <>
+                <circle cx={0} cy={0} r={14} strokeWidth={2.5} className="shadow" />
                 <circle cx={0} cy={0} r={14} strokeWidth={2} className="White" />
 
-                <text x={0.5} y={-2.5} className="White" textAnchor="middle" dominantBaseline="middle" fontSize={23}>1</text>
+                <text x={0.5} y={-2.5} className="White shadow" textAnchor="middle" dominantBaseline="middle" fontSize={23}>1</text>
             </>,
         );
     } else if (type & (NdSymbolTypeFlags.PwpCdaFlap2White)) {
         showIdent = false;
         elements.push(
             <>
+                <circle cx={0} cy={0} r={14} strokeWidth={2.5} className="shadow" />
                 <circle cx={0} cy={0} r={14} strokeWidth={2} className="White" />
 
-                <text x={0.5} y={-2.5} className="White" textAnchor="middle" dominantBaseline="middle" fontSize={23}>2</text>
+                <text x={0.5} y={-2.5} className="White shadow" textAnchor="middle" dominantBaseline="middle" fontSize={23}>2</text>
             </>,
         );
     } else if (type & (NdSymbolTypeFlags.PwpDecel)) {
         showIdent = false;
         elements.push(
             <>
+                <circle cx={0} cy={0} r={14} strokeWidth={2.5} className="shadow" />
                 <circle cx={0} cy={0} r={14} strokeWidth={2} className="Magenta" />
 
-                <text x={0.5} y={-2.5} className="Magenta" textAnchor="middle" dominantBaseline="middle" fontSize={23}>D</text>
+                <text x={0.5} y={-2.5} className="Magenta shadow" textAnchor="middle" dominantBaseline="middle" fontSize={23}>D</text>
             </>,
         );
     }
 
     if (showIdent) {
         elements.push(
-            <text x={15} y={-6} fontSize={20} className={colour}>
+            <text x={15} y={-6} fontSize={20} className={`${colour} shadow`}>
                 {ident}
             </text>,
         );

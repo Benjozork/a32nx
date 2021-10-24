@@ -35,6 +35,11 @@ const AdfNeedle: React.FC<Omit<RadioNavPointerProps, 'side'>> = ({ index, displa
         <g transform={`rotate(${relativeBearing} 384 ${centreHeight})`}>
             <path
                 d={paths[index - 1]}
+                strokeWidth={3.7}
+                className="shadow rounded"
+            />
+            <path
+                d={paths[index - 1]}
                 strokeWidth={3.2}
                 className="Green rounded"
             />
@@ -70,6 +75,11 @@ const VorNeedle: React.FC<Omit<RadioNavPointerProps, 'side'>> = ({ index, displa
 
     return available && (
         <g transform={`rotate(${relativeBearing} 384 ${centreHeight})`}>
+            <path
+                d={paths[index - 1]}
+                strokeWidth={3.7}
+                className="shadow rounded"
+            />
             <path
                 d={paths[index - 1]}
                 strokeWidth={3.2}

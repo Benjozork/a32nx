@@ -612,6 +612,7 @@ const MapFailOverlay: React.FC<MapFailOverlayProps> = memo(({ rangeSetting }) =>
 
 const Plane: React.FC = memo(() => (
     <g>
+        <line id="lubber-shadow" x1={384} y1={108} x2={384} y2={148} className="shadow" strokeWidth={5.5} strokeLinejoin="round" strokeLinecap="round" />
         <line id="lubber" x1={384} y1={108} x2={384} y2={148} className="Yellow" strokeWidth={5} strokeLinejoin="round" strokeLinecap="round" />
         <image x={342} y={596} width={84} height={71} xlinkHref="/Images/ND/AIRPLANE.svg" />
     </g>
@@ -623,12 +624,20 @@ const TrackBug: React.FC<{heading: number, track: number}> = memo(({ heading, tr
         return null;
     }
     return (
-        <path
-            d="M384,128 L378,138 L384,148 L390,138 L384,128"
-            transform={`rotate(${diff} 384 620)`}
-            className="Green rounded"
-            strokeWidth={3}
-        />
+        <>
+            <path
+                d="M384,128 L378,138 L384,148 L390,138 L384,128"
+                transform={`rotate(${diff} 384 620)`}
+                className="shadow rounded"
+                strokeWidth={3.5}
+            />
+            <path
+                d="M384,128 L378,138 L384,148 L390,138 L384,128"
+                transform={`rotate(${diff} 384 620)`}
+                className="Green rounded"
+                strokeWidth={3}
+            />
+        </>
     );
 });
 
@@ -639,11 +648,20 @@ const IlsCourseBug: React.FC<{heading: number, ilsCourse: number}> = ({ heading,
     }
 
     return (
-        <path
-            d="M384,122 L384,74 M376,114 L392,114"
-            transform={`rotate(${diff} 384 620)`}
-            className="Magenta rounded"
-        />
+        <>
+            <path
+                d="M384,122 L384,74 M376,114 L392,114"
+                transform={`rotate(${diff} 384 620)`}
+                className="shadow rounded"
+                strokeWidth={1.5}
+            />
+            <path
+                d="M384,122 L384,74 M376,114 L392,114"
+                transform={`rotate(${diff} 384 620)`}
+                className="Magenta rounded"
+                strokeWidth={1}
+            />
+        </>
     );
 };
 
@@ -655,12 +673,20 @@ const SelectedHeadingBug: React.FC<{heading: number, selected: number}> = ({ hea
     const diff = getSmallestAngle(selected, heading);
     if (Math.abs(diff) <= 48) {
         return (
-            <path
-                d="M382,126 L370,99 L398,99 L386,126"
-                transform={`rotate(${diff} 384 620)`}
-                className="Cyan rounded"
-                strokeWidth={3}
-            />
+            <>
+                <path
+                    d="M382,126 L370,99 L398,99 L386,126"
+                    transform={`rotate(${diff} 384 620)`}
+                    className="shadow rounded"
+                    strokeWidth={3.5}
+                />
+                <path
+                    d="M382,126 L370,99 L398,99 L386,126"
+                    transform={`rotate(${diff} 384 620)`}
+                    className="Cyan rounded"
+                    strokeWidth={3}
+                />
+            </>
         );
     }
     return (
@@ -669,7 +695,7 @@ const SelectedHeadingBug: React.FC<{heading: number, selected: number}> = ({ hea
             y={60}
             textAnchor="middle"
             transform={`rotate(${(diff) < 0 ? -38 : 38} 384 620)`}
-            className="Cyan"
+            className="Cyan shadow"
             fontSize={22}
         >
             {`${Math.round(selected).toString().padStart(3, '0')}`}

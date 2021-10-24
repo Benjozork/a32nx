@@ -604,6 +604,12 @@ const VorCaptureOverlay: React.FC<{
             </g>
             <path
                 d="M352,256 L416,256 M384,134 L384,294 M384,474 L384,634"
+                className="shadow rounded"
+                id="vor-course-pointer-shadow"
+                strokeWidth={4.5}
+            />
+            <path
+                d="M352,256 L416,256 M384,134 L384,294 M384,474 L384,634"
                 className="Cyan rounded"
                 id="vor-course-pointer"
                 strokeWidth={4}
@@ -613,9 +619,23 @@ const VorCaptureOverlay: React.FC<{
                     <>
                         <path
                             d="M372,322 L384,304 L396,322"
+                            className="shadow rounded"
+                            transform={`translate(${cdiPx}, ${toward ? 0 : 160}) rotate(${toward ? 0 : 180} 384 304)`}
+                            id="vor-deviation-direction-shadow"
+                            strokeWidth={4.5}
+                        />
+                        <path
+                            d="M384,304 L384,464"
+                            className="shadow rounded"
+                            transform={`translate(${cdiPx}, 0)`}
+                            id="vor-deviation-shadow"
+                            strokeWidth={4.5}
+                        />
+                        <path
+                            d="M372,322 L384,304 L396,322"
                             className="Cyan rounded"
                             transform={`translate(${cdiPx}, ${toward ? 0 : 160}) rotate(${toward ? 0 : 180} 384 304)`}
-                            id="vor-deviation"
+                            id="vor-deviation-direction"
                             strokeWidth={4}
                         />
                         <path
@@ -655,19 +675,34 @@ const IlsCaptureOverlay: React.FC<{
             </g>
             <path
                 d="M352,256 L416,256 M384,134 L384,294 M384,474 L384,634"
+                className="shadow rounded"
+                id="ils-course-pointer-shadow"
+                strokeWidth={4.5}
+            />
+            <path
+                d="M352,256 L416,256 M384,134 L384,294 M384,474 L384,634"
                 className="Magenta rounded"
                 id="ils-course-pointer"
                 strokeWidth={4}
             />
             { available
                 && (
-                    <path
-                        d="M384,304 L384,464"
-                        className="Magenta rounded"
-                        transform={`translate(${cdiPx}, 0)`}
-                        id="ils-deviation"
-                        strokeWidth={4}
-                    />
+                    <>
+                        <path
+                            d="M384,304 L384,464"
+                            className="shadow rounded"
+                            transform={`translate(${cdiPx}, 0)`}
+                            id="ils-deviation-shadow"
+                            strokeWidth={4.5}
+                        />
+                        <path
+                            d="M384,304 L384,464"
+                            className="Magenta rounded"
+                            transform={`translate(${cdiPx}, 0)`}
+                            id="ils-deviation"
+                            strokeWidth={4}
+                        />
+                    </>
                 )}
         </g>
     );
@@ -675,6 +710,7 @@ const IlsCaptureOverlay: React.FC<{
 
 const Plane: React.FC = () => (
     <g>
+        <line id="lubber-shadow" x1={384} y1={116} x2={384} y2={152} className="shadow" strokeWidth={5.5} strokeLinejoin="round" strokeLinecap="round" />
         <line id="lubber" x1={384} y1={116} x2={384} y2={152} className="Yellow" strokeWidth={5} strokeLinejoin="round" strokeLinecap="round" />
         <image x={342} y={357} width={84} height={71} xlinkHref="/Images/ND/AIRPLANE.svg" />
     </g>
@@ -683,12 +719,20 @@ const Plane: React.FC = () => (
 const TrackBug: React.FC<{heading: number, track: number}> = memo(({ heading, track }) => {
     const diff = getSmallestAngle(track, heading);
     return (
-        <path
-            d="M384,134 L379,143 L384,152 L389,143 L384,134"
-            transform={`rotate(${diff} 384 384)`}
-            className="Green rounded"
-            strokeWidth={3}
-        />
+        <>
+            <path
+                d="M384,134 L379,143 L384,152 L389,143 L384,134"
+                transform={`rotate(${diff} 384 384)`}
+                className="shadow rounded"
+                strokeWidth={3.5}
+            />
+            <path
+                d="M384,134 L379,143 L384,152 L389,143 L384,134"
+                transform={`rotate(${diff} 384 384)`}
+                className="Green rounded"
+                strokeWidth={3}
+            />
+        </>
     );
 });
 
@@ -699,11 +743,20 @@ const IlsCourseBug: React.FC<{heading: number, ilsCourse: number}> = ({ heading,
 
     const diff = getSmallestAngle(ilsCourse, heading);
     return (
-        <path
-            d="M384,128 L384,96 M376,120 L392,120"
-            transform={`rotate(${diff} 384 384)`}
-            className="Magenta rounded"
-        />
+        <>
+            <path
+                d="M384,128 L384,96 M376,120 L392,120"
+                transform={`rotate(${diff} 384 384)`}
+                className="shadow rounded"
+                strokeWidth={1.5}
+            />
+            <path
+                d="M384,128 L384,96 M376,120 L392,120"
+                transform={`rotate(${diff} 384 384)`}
+                className="Magenta rounded"
+                strokeWidth={1}
+            />
+        </>
     );
 };
 
@@ -714,12 +767,20 @@ const SelectedHeadingBug: React.FC<{heading: number, selected: number}> = ({ hea
 
     const diff = getSmallestAngle(selected, heading);
     return (
-        <path
-            d="M380,132 L372,114 L396,114 L388,132"
-            transform={`rotate(${diff} 384 384)`}
-            className="Cyan rounded"
-            strokeWidth={3}
-        />
+        <>
+            <path
+                d="M380,132 L372,114 L396,114 L388,132"
+                transform={`rotate(${diff} 384 384)`}
+                className="shadow rounded"
+                strokeWidth={3.5}
+            />
+            <path
+                d="M380,132 L372,114 L396,114 L388,132"
+                transform={`rotate(${diff} 384 384)`}
+                className="Cyan rounded"
+                strokeWidth={3}
+            />
+        </>
     );
 };
 

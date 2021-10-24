@@ -23,7 +23,7 @@ export const CrossTrack: React.FC<{ x: number, y: number}> = memo(({ x, y }) => 
     }
 
     return (
-        <text x={crossTrackX} y={y} textAnchor={crossTrackAnchor} fontSize={24} className="Green">
+        <text x={crossTrackX} y={y} textAnchor={crossTrackAnchor} fontSize={24} className="Green shadow">
             {crossTrackText}
         </text>
     );
