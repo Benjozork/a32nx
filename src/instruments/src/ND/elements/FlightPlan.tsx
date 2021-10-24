@@ -80,7 +80,7 @@ export const FlightPlan: FC<FlightPathProps> = memo(({ x = 0, y = 0, symbols, fl
             })}
             <g id="flight-path">
                 <path d={flightPath} className="shadow" strokeWidth={2.5} fill="none" strokeDasharray="15 10" />
-                <path d={flightPath} className={type === FlightPlanType.Temp ? "Yellow" : "Green"} strokeWidth={2} fill="none" strokeDasharray={type === FlightPlanType.Nav ? "" : "15 10"} />
+                <path d={flightPath} className={type === FlightPlanType.Temp ? 'Yellow' : 'Green'} strokeWidth={2} fill="none" strokeDasharray={type === FlightPlanType.Nav ? '' : '15 10'} />
             </g>
             {symbols.map((symbol) => {
                 const position = mapParams.coordinatesToXYy(symbol.location);
@@ -271,7 +271,7 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
                         strokeWidth={2.5}
                         className="shadow"
                         strokeDasharray="15 10"
-                    />
+                    />,
                 );
                 elements.push(
                     <path
@@ -279,7 +279,7 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
                         strokeWidth={2}
                         className="Cyan"
                         strokeDasharray="15 10"
-                    />
+                    />,
                 );
             }
         }
@@ -387,10 +387,9 @@ interface ConstraintMarkerProps {
     x: number,
     y: number,
     type: NdSymbolTypeFlags,
-    mapParams: MapParameters,
 }
 
-const ConstraintMarker: FC<ConstraintMarkerProps> = memo(({ x, y, type, mapParams }) => {
+const ConstraintMarker: FC<ConstraintMarkerProps> = memo(({ x, y, type }) => {
     if (type & NdSymbolTypeFlags.ConstraintMet) {
         return (
             <Layer x={x} y={y}>
@@ -398,7 +397,9 @@ const ConstraintMarker: FC<ConstraintMarkerProps> = memo(({ x, y, type, mapParam
                 <circle r={12} className="Magenta" strokeWidth={2} />
             </Layer>
         );
-    } else if (type & NdSymbolTypeFlags.ConstraintMissed) {
+    }
+
+    if (type & NdSymbolTypeFlags.ConstraintMissed) {
         return (
             <Layer x={x} y={y}>
                 <circle r={12} className="shadow" strokeWidth={2.5} />

@@ -64,9 +64,8 @@ export class Geometry {
                 const toParams = activeLeg.getGuidanceParameters(ppos, trueTrack);
                 params.phiCommand = toParams.phiCommand ?? 0;
                 return params;
-            } else {
-                return fromTransition.getGuidanceParameters(ppos, trueTrack);
             }
+            return fromTransition.getGuidanceParameters(ppos, trueTrack);
         }
 
         const toTransition = this.transitions.get(1);
@@ -82,9 +81,8 @@ export class Geometry {
                     const toParams = nextLeg.getGuidanceParameters(ppos, trueTrack);
                     params.phiCommand = toParams.phiCommand ?? 0;
                     return params;
-                } else {
-                    return toTransition.getGuidanceParameters(ppos, trueTrack);;
                 }
+                return toTransition.getGuidanceParameters(ppos, trueTrack);
             }
 
             if (activeLeg) {
