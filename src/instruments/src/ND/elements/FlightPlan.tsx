@@ -59,10 +59,25 @@ export const FlightPlan: FC<FlightPathProps> = memo(({ x = 0, y = 0, symbols, fl
     if (geometry) {
         flightPath = makePathFromGeometry(geometry, mapParams);
     }
-    }
+
+    const constraintFlags = NdSymbolTypeFlags.ConstraintMet | NdSymbolTypeFlags.ConstraintMissed | NdSymbolTypeFlags.ConstraintUnknown;
 
     return (
         <Layer x={x} y={y}>
+            { /* constraint circles need to be drawn under the flight path */ }
+            {symbols.filter((symbol) => (symbol.type & constraintFlags) > 0).map((symbol) => {
+                const position = mapParams.coordinatesToXYy(symbol.location);
+
+                return (
+                    <ConstraintMarker
+                        key={symbol.databaseId}
+                        x={Math.round(position[0])}
+                        y={Math.round(position[1])}
+                        type={symbol.type}
+                        mapParams={mapParams}
+                    />
+                );
+            })}
             <g id="flight-path">
                 <path d={flightPath} className="shadow" strokeWidth={2.5} fill="none" strokeDasharray="15 10" />
                 <path d={flightPath} className={type === FlightPlanType.Temp ? "Yellow" : "Green"} strokeWidth={2} fill="none" strokeDasharray={type === FlightPlanType.Nav ? "" : "15 10"} />
@@ -280,14 +295,6 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
         }
     }
 
-    if (type & NdSymbolTypeFlags.ConstraintMet) {
-        elements.push(<circle r={12} className="Magenta" strokeWidth={2} />);
-    } else if (type & NdSymbolTypeFlags.ConstraintMissed) {
-        elements.push(<circle r={12} className="Amber" strokeWidth={2} />);
-    } else if (type & NdSymbolTypeFlags.ConstraintUnknown) {
-        elements.push(<circle r={12} className="White" strokeWidth={2} />);
-    }
-
     if (constraints) {
         let constraintY = -6;
         elements.push(...constraints.map((t) => (
@@ -372,6 +379,38 @@ const SymbolMarker: FC<SymbolMarkerProps> = memo(({ ident, x, y, type, constrain
     return (
         <Layer x={x} y={y}>
             {elements}
+        </Layer>
+    );
+});
+
+interface ConstraintMarkerProps {
+    x: number,
+    y: number,
+    type: NdSymbolTypeFlags,
+    mapParams: MapParameters,
+}
+
+const ConstraintMarker: FC<ConstraintMarkerProps> = memo(({ x, y, type, mapParams }) => {
+    if (type & NdSymbolTypeFlags.ConstraintMet) {
+        return (
+            <Layer x={x} y={y}>
+                <circle r={12} className="shadow" strokeWidth={2.5} />
+                <circle r={12} className="Magenta" strokeWidth={2} />
+            </Layer>
+        );
+    } else if (type & NdSymbolTypeFlags.ConstraintMissed) {
+        return (
+            <Layer x={x} y={y}>
+                <circle r={12} className="shadow" strokeWidth={2.5} />
+                <circle r={12} className="Amber" strokeWidth={2} />
+            </Layer>
+        );
+    }
+
+    return (
+        <Layer x={x} y={y}>
+            <circle r={12} className="shadow" strokeWidth={2.5} />
+            <circle r={12} className="White" strokeWidth={2} />
         </Layer>
     );
 });
