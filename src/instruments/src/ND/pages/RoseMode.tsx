@@ -79,13 +79,8 @@ export const RoseMode: FC<RoseModeProps> = ({ symbols, adirsAlign, rangeSetting,
             <>
                 <Overlay
                     heading={heading}
-                    track={track}
                     rangeSetting={rangeSetting}
                     tcasMode={tcasMode}
-                    displayMode={mode}
-                    selectedHeading={selectedHeading}
-                    ilsCourse={ilsCourse}
-                    lsDisplayed={lsDisplayed}
                 />
 
                 <g id="map" clipPath="url(#rose-mode-map-clip)">
@@ -129,6 +124,10 @@ export const RoseMode: FC<RoseModeProps> = ({ symbols, adirsAlign, rangeSetting,
                 { mode === Mode.ROSE_ILS && <IlsInfo /> }
 
                 <ApproachMessage info={flightPlanManager.getAirportApproach()} flightPhase={fmgcFlightPhase} />
+                <TrackBug heading={heading} track={track} />
+                { mode === Mode.ROSE_NAV && lsDisplayed && <IlsCourseBug heading={heading} ilsCourse={ilsCourse} /> }
+                <SelectedHeadingBug heading={heading} selected={selectedHeading} />
+                { mode === Mode.ROSE_ILS && <GlideSlope /> }
                 <Plane />
                 {mode === Mode.ROSE_NAV && <CrossTrack x={390} y={407} />}
             </>
@@ -145,16 +144,11 @@ export const RoseMode: FC<RoseModeProps> = ({ symbols, adirsAlign, rangeSetting,
 
 interface OverlayProps {
     heading: number,
-    track: number,
     rangeSetting: number,
     tcasMode: number,
-    displayMode: Mode,
-    selectedHeading: number,
-    ilsCourse: number,
-    lsDisplayed: boolean,
 }
 
-const Overlay: FC<OverlayProps> = ({ heading, track, rangeSetting, tcasMode, displayMode, selectedHeading, ilsCourse, lsDisplayed }) => (
+const Overlay: FC<OverlayProps> = ({ heading, rangeSetting, tcasMode }) => (
     <>
         <RoseModeOverlayDefs />
 
@@ -224,13 +218,7 @@ const Overlay: FC<OverlayProps> = ({ heading, track, rangeSetting, tcasMode, dis
             <path d="M384,132 L379,123 L389,123 L384,132" transform="rotate(225 384 384)" fill="white" />
             <path d="M384,132 L379,123 L389,123 L384,132" transform="rotate(270 384 384)" fill="white" />
             <path d="M384,132 L379,123 L389,123 L384,132" transform="rotate(315 384 384)" fill="white" />
-
-            <TrackBug heading={heading} track={track} />
-            { displayMode === Mode.ROSE_NAV && lsDisplayed && <IlsCourseBug heading={heading} ilsCourse={ilsCourse} /> }
-            <SelectedHeadingBug heading={heading} selected={selectedHeading} />
         </g>
-
-        { displayMode === Mode.ROSE_ILS && <GlideSlope /> }
     </>
 );
 
@@ -699,6 +687,7 @@ const TrackBug: React.FC<{heading: number, track: number}> = memo(({ heading, tr
             d="M384,134 L379,143 L384,152 L389,143 L384,134"
             transform={`rotate(${diff} 384 384)`}
             className="Green rounded"
+            strokeWidth={3}
         />
     );
 });
@@ -729,6 +718,7 @@ const SelectedHeadingBug: React.FC<{heading: number, selected: number}> = ({ hea
             d="M380,132 L372,114 L396,114 L388,132"
             transform={`rotate(${diff} 384 384)`}
             className="Cyan rounded"
+            strokeWidth={3}
         />
     );
 };

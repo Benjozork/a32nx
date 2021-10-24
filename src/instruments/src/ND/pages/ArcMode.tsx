@@ -78,13 +78,8 @@ export const ArcMode: React.FC<ArcModeProps> = ({ symbols, adirsAlign, rangeSett
             <>
                 <Overlay
                     heading={heading}
-                    track={track}
                     rangeSetting={rangeSetting}
-                    _side={side}
                     tcasMode={tcasMode}
-                    selectedHeading={selectedHeading}
-                    ilsCourse={ilsCourse}
-                    lsDisplayed={lsDisplayed}
                 />
                 <g id="map" clipPath="url(#arc-mode-map-clip)">
                     <g visibility={mapHidden ? 'hidden' : 'visible'}>
@@ -117,6 +112,9 @@ export const ArcMode: React.FC<ArcModeProps> = ({ symbols, adirsAlign, rangeSett
                 </g>
                 <ToWaypointIndicator info={flightPlanManager.getCurrentFlightPlan().computeActiveWaypointStatistics(ppos)} />
                 <ApproachMessage info={flightPlanManager.getAirportApproach()} flightPhase={fmgcFlightPhase} />
+                <TrackBug heading={heading} track={track} />
+                { lsDisplayed && <IlsCourseBug heading={heading} ilsCourse={ilsCourse} /> }
+                <SelectedHeadingBug heading={heading} selected={selectedHeading} />
                 <Plane />
                 <CrossTrack x={390} y={646} />
             </>
@@ -134,16 +132,11 @@ export const ArcMode: React.FC<ArcModeProps> = ({ symbols, adirsAlign, rangeSett
 
 interface OverlayProps {
     heading: number,
-    track: number,
     rangeSetting: number,
-    _side: EfisSide,
     tcasMode: number,
-    selectedHeading: number,
-    ilsCourse: number,
-    lsDisplayed: boolean,
 }
 
-const Overlay: React.FC<OverlayProps> = memo(({ heading, track, rangeSetting, _side, tcasMode, selectedHeading, ilsCourse, lsDisplayed }) => (
+const Overlay: React.FC<OverlayProps> = memo(({ heading, rangeSetting, tcasMode }) => (
     <>
         <ArcModeOverlayDefs />
 
@@ -207,10 +200,6 @@ const Overlay: React.FC<OverlayProps> = memo(({ heading, track, rangeSetting, _s
                             <line x1={384} x2={384} y1={558 - 6} y2={558 + 6} className="White rounded" transform="rotate(60 384 620)" />
                         </g>
                     )}
-
-            <TrackBug heading={heading} track={track} />
-            { lsDisplayed && <IlsCourseBug heading={heading} ilsCourse={ilsCourse} /> }
-            <SelectedHeadingBug heading={heading} selected={selectedHeading} />
         </g>
     </>
 ));
@@ -638,6 +627,7 @@ const TrackBug: React.FC<{heading: number, track: number}> = memo(({ heading, tr
             d="M384,128 L378,138 L384,148 L390,138 L384,128"
             transform={`rotate(${diff} 384 620)`}
             className="Green rounded"
+            strokeWidth={3}
         />
     );
 });
@@ -669,6 +659,7 @@ const SelectedHeadingBug: React.FC<{heading: number, selected: number}> = ({ hea
                 d="M382,126 L370,99 L398,99 L386,126"
                 transform={`rotate(${diff} 384 620)`}
                 className="Cyan rounded"
+                strokeWidth={3}
             />
         );
     }
