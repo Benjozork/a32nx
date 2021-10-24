@@ -104,10 +104,10 @@ const Overlay: FC<OverlayProps> = memo(({ rangeSetting }) => (
         <clipPath id="plan-mode-map-clip">
             <polygon points="45,112 140,112 280,56 488,56 628,112 723,112 723,720 114,720 114,633 45,633" />
         </clipPath>
-        <g className="White" strokeWidth={3}>
-            <circle cx={384} cy={384} r={250} />
+        <g strokeWidth={3}>
+            <circle cx={384} cy={384} r={250} className="White" />
 
-            <path d="M259,384a125,125 0 1,0 250,0a125,125 0 1,0 -250,0" strokeDasharray="14 13" />
+            <path d="M259,384a125,125 0 1,0 250,0a125,125 0 1,0 -250,0" strokeDasharray="14 13" className="White" />
 
             <text x={310} y={474} className="Cyan" fontSize={22}>{rangeSetting / 4}</text>
             <text x={212} y={556} className="Cyan" fontSize={22}>{rangeSetting / 2}</text>
