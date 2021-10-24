@@ -78,7 +78,7 @@ export const FlightPlan: FC<FlightPathProps> = memo(({ x = 0, y = 0, symbols, fl
 
                 return (
                     <SymbolMarker
-                        key={symbol.ident}
+                        key={symbol.databaseId}
                         ident={symbol.ident}
                         x={Math.round(position[0])}
                         y={Math.round(position[1])}
