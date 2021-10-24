@@ -137,6 +137,8 @@ export class LnavDriver implements GuidanceComponent {
                     this.sequenceDiscontinuity(currentLeg);
                 } else {
                     this.sequenceLeg(currentLeg);
+                    SimVar.SetSimVarValue('L:A32NX_FG_RAD', 'number', -1);
+                    SimVar.SetSimVarValue('L:A32NX_FG_DTG', 'number', -1);
                 }
             }
         }

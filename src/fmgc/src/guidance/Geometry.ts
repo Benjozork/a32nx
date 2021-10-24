@@ -55,7 +55,10 @@ export class Geometry {
         const fromTransition = this.transitions.get(0);
         if (fromTransition && fromTransition.isAbeam(ppos)) {
             const rad = this.getRollAnticipationDistance(gs, fromTransition, activeLeg);
-            if (fromTransition.getDistanceToGo(ppos) <= rad) {
+            const dtg = fromTransition.getDistanceToGo(ppos);
+            SimVar.SetSimVarValue('L:A32NX_FG_RAD', 'number', rad);
+            SimVar.SetSimVarValue('L:A32NX_FG_DTG', 'number', dtg);
+            if (dtg <= rad) {
                 // console.log(`RAD for transition ${rad}`);
                 const params = fromTransition.getGuidanceParameters(ppos, trueTrack);
                 const toParams = activeLeg.getGuidanceParameters(ppos, trueTrack);
@@ -70,7 +73,10 @@ export class Geometry {
         if (toTransition) {
             if (toTransition.isAbeam(ppos)) {
                 const rad = this.getRollAnticipationDistance(gs, toTransition, nextLeg);
-                if (toTransition.getDistanceToGo(ppos) <= rad) {
+                const dtg = toTransition.getDistanceToGo(ppos);
+                SimVar.SetSimVarValue('L:A32NX_FG_RAD', 'number', rad);
+                SimVar.SetSimVarValue('L:A32NX_FG_DTG', 'number', dtg);
+                if (dtg <= rad) {
                     // console.log(`RAD for transition ${rad}`);
                     const params = toTransition.getGuidanceParameters(ppos, trueTrack);
                     const toParams = nextLeg.getGuidanceParameters(ppos, trueTrack);
@@ -86,7 +92,10 @@ export class Geometry {
                 // TODO this should be tidied up somewhere else
                 const unTravelled = Avionics.Utils.computeGreatCircleDistance(itp, activeLeg.terminatorLocation);
                 const rad = this.getRollAnticipationDistance(gs, activeLeg, toTransition);
-                if ((activeLeg.getDistanceToGo(ppos) - unTravelled) <= rad) {
+                const dtg = activeLeg.getDistanceToGo(ppos) - unTravelled;
+                SimVar.SetSimVarValue('L:A32NX_FG_RAD', 'number', rad);
+                SimVar.SetSimVarValue('L:A32NX_FG_DTG', 'number', dtg);
+                if (dtg <= rad) {
                     // console.log(`RAD for transition ${rad}`);
                     const params = activeLeg.getGuidanceParameters(ppos, trueTrack);
                     const toParams = toTransition.getGuidanceParameters(ppos, trueTrack);
@@ -97,9 +106,12 @@ export class Geometry {
         }
 
         if (activeLeg) {
+            const dtg = activeLeg.getDistanceToGo(ppos);
+            SimVar.SetSimVarValue('L:A32NX_FG_DTG', 'number', dtg);
             if (nextLeg) {
                 const rad = this.getRollAnticipationDistance(gs, activeLeg, nextLeg);
-                if (activeLeg.getDistanceToGo(ppos) <= rad) {
+                SimVar.SetSimVarValue('L:A32NX_FG_RAD', 'number', rad);
+                if (dtg <= rad) {
                     // console.log(`RAD for next leg ${rad}`);
                     const params = activeLeg.getGuidanceParameters(ppos, trueTrack);
                     const toParams = nextLeg.getGuidanceParameters(ppos, trueTrack);
