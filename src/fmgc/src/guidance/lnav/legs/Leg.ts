@@ -1,9 +1,9 @@
 import { SegmentType } from '@fmgc/flightplanning/FlightPlanSegment';
 import { Coordinates } from '@fmgc/flightplanning/data/geo';
-import { AltitudeConstraint, SpeedConstraint } from '@fmgc/guidance/lnav/legs/index';
 import { Guidable } from '@fmgc/guidance/Guidable';
 import { Geo } from '@fmgc/utils/Geo';
 import { TurnDirection } from '@fmgc/types/fstypes/FSEnums';
+import { LegEditableData } from '@fmgc/flightplanning/data/legs';
 
 export abstract class Leg extends Guidable {
     segment: SegmentType;
@@ -20,9 +20,7 @@ export abstract class Leg extends Guidable {
 
     displayedOnMap: boolean = true
 
-    abstract get speedConstraint(): SpeedConstraint | undefined;
-
-    abstract get altitudeConstraint(): AltitudeConstraint | undefined;
+    abstract readonly editableData: Readonly<LegEditableData>
 
     get disableAutomaticSequencing(): boolean {
         return false;

@@ -1,4 +1,3 @@
-import { AltitudeConstraint, SpeedConstraint } from '@fmgc/guidance/lnav/legs/index';
 import { Coordinates } from '@fmgc/flightplanning/data/geo';
 import { Guidable } from '@fmgc/guidance/Guidable';
 import { SegmentType } from '@fmgc/flightplanning/FlightPlanSegment';
@@ -10,6 +9,7 @@ import { LnavConfig } from '@fmgc/guidance/LnavConfig';
 import { courseToFixDistanceToGo, courseToFixGuidance } from '@fmgc/guidance/lnav/CommonGeometry';
 import { Transition } from '@fmgc/guidance/lnav/Transition';
 import { Leg } from '@fmgc/guidance/lnav/legs/Leg';
+import { AltitudeConstraint, LegEditableData } from '@fmgc/flightplanning/data/legs';
 import { PathVector, PathVectorType } from '../PathVector';
 
 export class DFLeg extends XFLeg {
@@ -17,6 +17,7 @@ export class DFLeg extends XFLeg {
 
     constructor(
         fix: WayPoint,
+        public readonly editableData: Readonly<LegEditableData>,
         segment: SegmentType,
     ) {
         super(fix);
@@ -122,10 +123,6 @@ export class DFLeg extends XFLeg {
 
     isAbeam(_ppos: Coordinates): boolean {
         return false;
-    }
-
-    get speedConstraint(): SpeedConstraint | undefined {
-        return undefined;
     }
 
     get repr(): string {

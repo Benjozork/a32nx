@@ -30,16 +30,16 @@ export class VerticalFlightPlanBuilder {
 
         for (const leg of descentLegs.entries()) {
             descentConstraints[leg[0]] = {};
-            descentConstraints[leg[0]].altitude = leg[1].altitudeConstraint;
-            descentConstraints[leg[0]].speed = leg[1].speedConstraint;
+            descentConstraints[leg[0]].altitude = leg[1].editableData.altitudeConstraint;
+            descentConstraints[leg[0]].speed = leg[1].editableData.speedConstraint;
         }
 
         const approachConstraints: ConstraintTable = {};
 
         for (const leg of approachLegs.entries()) {
             approachConstraints[leg[0]] = {};
-            approachConstraints[leg[0]].altitude = leg[1].altitudeConstraint;
-            approachConstraints[leg[0]].speed = leg[1].speedConstraint;
+            approachConstraints[leg[0]].altitude = leg[1].editableData.altitudeConstraint;
+            approachConstraints[leg[0]].speed = leg[1].editableData.speedConstraint;
         }
 
         return {

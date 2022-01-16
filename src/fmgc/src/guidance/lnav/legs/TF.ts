@@ -1,20 +1,14 @@
 import { GuidanceParameters } from '@fmgc/guidance/ControlLaws';
 import { MathUtils } from '@shared/MathUtils';
-import {
-    AltitudeConstraint,
-    getAltitudeConstraintFromWaypoint,
-    getSpeedConstraintFromWaypoint,
-    SpeedConstraint,
-} from '@fmgc/guidance/lnav/legs';
 import { SegmentType } from '@fmgc/wtsdk';
 import { WaypointConstraintType } from '@fmgc/flightplanning/FlightPlanManager';
 import { Coordinates } from '@fmgc/flightplanning/data/geo';
 import { Guidable } from '@fmgc/guidance/Guidable';
-import { Constants } from '@shared/Constants';
 import { XFLeg } from '@fmgc/guidance/lnav/legs/XF';
 import { Geo } from '@fmgc/utils/Geo';
-import { courseToFixDistanceToGo, courseToFixGuidance, fixToFixGuidance, getIntermediatePoint } from '@fmgc/guidance/lnav/CommonGeometry';
+import { courseToFixDistanceToGo, fixToFixGuidance, getIntermediatePoint } from '@fmgc/guidance/lnav/CommonGeometry';
 import { LnavConfig } from '@fmgc/guidance/LnavConfig';
+import { LegEditableData } from '@fmgc/flightplanning/data/legs';
 import { PathVector, PathVectorType } from '../PathVector';
 
 export class TFLeg extends XFLeg {
@@ -31,6 +25,7 @@ export class TFLeg extends XFLeg {
     constructor(
         from: WayPoint,
         to: WayPoint,
+        public readonly editableData: Readonly<LegEditableData>,
         segment: SegmentType,
     ) {
         super(to);
@@ -85,24 +80,6 @@ export class TFLeg extends XFLeg {
         }
 
         this.isComputed = true;
-    }
-
-    get speedConstraint(): SpeedConstraint | undefined {
-        return getSpeedConstraintFromWaypoint(this.to);
-    }
-
-    get altitudeConstraint(): AltitudeConstraint | undefined {
-        return getAltitudeConstraintFromWaypoint(this.to);
-    }
-
-    // TODO: refactor
-    get initialSpeedConstraint(): SpeedConstraint | undefined {
-        return getSpeedConstraintFromWaypoint(this.from);
-    }
-
-    // TODO: refactor
-    get initialAltitudeConstraint(): AltitudeConstraint | undefined {
-        return getAltitudeConstraintFromWaypoint(this.from);
     }
 
     getPseudoWaypointLocation(distanceBeforeTerminator: NauticalMiles): Coordinates | undefined {

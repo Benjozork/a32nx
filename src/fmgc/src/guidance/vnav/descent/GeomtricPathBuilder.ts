@@ -39,7 +39,7 @@ export class GeomtricPathBuilder {
         let searchIdx = startLegIdx - 1;
         let searchLeg = geometry.legs.get(searchIdx);
         while (searchLeg) {
-            if (searchLeg.altitudeConstraint) {
+            if (searchLeg.editableData.altitudeConstraint) {
                 break;
             }
 
@@ -55,8 +55,8 @@ export class GeomtricPathBuilder {
         leg2: Leg,
     ): StepResults {
         const geometricalStepResult = Predictions.geometricStep(
-            leg1.altitudeConstraint.altitude2 || leg1.altitudeConstraint.altitude1,
-            leg2.altitudeConstraint.altitude2 || leg2.altitudeConstraint.altitude1,
+            leg1.editableData.altitudeConstraint.altitude2 || leg1.editableData.altitudeConstraint.altitude1,
+            leg2.editableData.altitudeConstraint.altitude2 || leg2.editableData.altitudeConstraint.altitude1,
             leg2.distance, // this should include transition from leg1 to leg2
             200,
             0.6,

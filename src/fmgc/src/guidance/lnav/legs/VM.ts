@@ -5,6 +5,7 @@ import { Leg } from '@fmgc/guidance/lnav/legs/Leg';
 import { PathVector, PathVectorType } from '@fmgc/guidance/lnav/PathVector';
 import { Guidable } from '@fmgc/guidance/Guidable';
 import { TurnDirection } from '@fmgc/types/fstypes/FSEnums';
+import { LegEditableData } from '@fmgc/flightplanning/data/legs';
 
 /**
  * Temporary - better solution is just to have an `InfiniteLine` vector...
@@ -18,6 +19,7 @@ export class VMLeg extends Leg {
     constructor(
         public heading: DegreesMagnetic,
         public course: DegreesTrue,
+        public readonly editableData: Readonly<LegEditableData>,
         segment: SegmentType,
         constrainedTurnDirection = TurnDirection.Unknown,
     ) {
@@ -79,15 +81,6 @@ export class VMLeg extends Leg {
 
     get distance(): NauticalMiles {
         return 0;
-    }
-
-    // Manual legs don't have speed constraints
-    get speedConstraint(): undefined {
-        return undefined;
-    }
-
-    get altitudeConstraint(): undefined {
-        return undefined;
     }
 
     // Can't get pseudo-waypoint location without a finite terminator

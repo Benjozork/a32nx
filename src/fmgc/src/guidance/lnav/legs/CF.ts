@@ -1,4 +1,3 @@
-import { AltitudeConstraint, SpeedConstraint } from '@fmgc/guidance/lnav/legs/index';
 import { Coordinates } from '@fmgc/flightplanning/data/geo';
 import { Guidable } from '@fmgc/guidance/Guidable';
 import { SegmentType } from '@fmgc/flightplanning/FlightPlanSegment';
@@ -9,6 +8,7 @@ import { LnavConfig } from '@fmgc/guidance/LnavConfig';
 import { Transition } from '@fmgc/guidance/lnav/Transition';
 import { Geo } from '@fmgc/utils/Geo';
 import { FixedRadiusTransition } from '@fmgc/guidance/lnav/transitions/FixedRadiusTransition';
+import { AltitudeConstraint, LegEditableData } from '@fmgc/flightplanning/data/legs';
 import { PathVector, PathVectorType } from '../PathVector';
 
 export class CFLeg extends XFLeg {
@@ -17,6 +17,7 @@ export class CFLeg extends XFLeg {
     constructor(
         fix: WayPoint,
         public readonly course: DegreesTrue,
+        public readonly editableData: Readonly<LegEditableData>,
         segment: SegmentType,
     ) {
         super(fix);
@@ -126,10 +127,6 @@ export class CFLeg extends XFLeg {
         const dtg = courseToFixDistanceToGo(ppos, this.course, this.getPathEndPoint());
 
         return dtg >= 0 && dtg <= this.distance;
-    }
-
-    get speedConstraint(): SpeedConstraint | undefined {
-        return undefined;
     }
 
     get repr(): string {

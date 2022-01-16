@@ -1,5 +1,5 @@
-import { AltitudeConstraint, SpeedConstraint } from '@fmgc/guidance/lnav/legs';
 import { SpeedLimit } from '@fmgc/guidance/vnav/SpeedLimit';
+import { AltitudeConstraint, SpeedConstraint } from "@fmgc/flightplanning/data/legs";
 
 export interface VerticalFlightPlan {
     climb: VerticalClimb,

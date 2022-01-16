@@ -1,32 +1,4 @@
-import { Leg } from '@fmgc/guidance/lnav/legs/Leg';
-
-export enum AltitudeConstraintType {
-    at,
-    atOrAbove,
-    atOrBelow,
-    range,
-}
-
-export enum SpeedConstraintType {
-    at,
-    atOrAbove,
-    atOrBelow,
-}
-
-export interface AltitudeConstraint {
-    type: AltitudeConstraintType,
-    altitude1: Feet,
-    altitude2: Feet | undefined,
-}
-
-export interface SpeedConstraint {
-    type: SpeedConstraintType,
-    speed: Knots,
-}
-
-export abstract class FXLeg extends Leg {
-    from: WayPoint;
-}
+import { AltitudeConstraint, AltitudeConstraintType, SpeedConstraint, SpeedConstraintType } from '@fmgc/flightplanning/data/legs';
 
 export function getAltitudeConstraintFromWaypoint(wp: WayPoint): AltitudeConstraint | undefined {
     if (wp.legAltitudeDescription && wp.legAltitude1) {
@@ -35,16 +7,16 @@ export function getAltitudeConstraintFromWaypoint(wp: WayPoint): AltitudeConstra
         ac.altitude2 = undefined;
         switch (wp.legAltitudeDescription) {
         case 1:
-            ac.type = AltitudeConstraintType.at;
+            ac.type = AltitudeConstraintType.At;
             break;
         case 2:
-            ac.type = AltitudeConstraintType.atOrAbove;
+            ac.type = AltitudeConstraintType.AtOrAbove;
             break;
         case 3:
-            ac.type = AltitudeConstraintType.atOrBelow;
+            ac.type = AltitudeConstraintType.AtOrBelow;
             break;
         case 4:
-            ac.type = AltitudeConstraintType.range;
+            ac.type = AltitudeConstraintType.Range;
             ac.altitude2 = wp.legAltitude2;
             break;
         default:
@@ -58,7 +30,7 @@ export function getAltitudeConstraintFromWaypoint(wp: WayPoint): AltitudeConstra
 export function getSpeedConstraintFromWaypoint(wp: WayPoint): SpeedConstraint | undefined {
     if (wp.speedConstraint) {
         const sc: Partial<SpeedConstraint> = {};
-        sc.type = SpeedConstraintType.at;
+        sc.type = SpeedConstraintType.At;
         sc.speed = wp.speedConstraint;
         return sc as SpeedConstraint;
     }

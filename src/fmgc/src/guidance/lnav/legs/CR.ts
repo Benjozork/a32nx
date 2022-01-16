@@ -1,4 +1,3 @@
-import { AltitudeConstraint, SpeedConstraint } from '@fmgc/guidance/lnav/legs/index';
 import { Coordinates } from '@fmgc/flightplanning/data/geo';
 import { Guidable } from '@fmgc/guidance/Guidable';
 import { SegmentType } from '@fmgc/flightplanning/FlightPlanSegment';
@@ -8,6 +7,7 @@ import { Geo } from '@fmgc/utils/Geo';
 import { LnavConfig } from '@fmgc/guidance/LnavConfig';
 import { Leg } from '@fmgc/guidance/lnav/legs/Leg';
 import { TurnDirection } from '@fmgc/types/fstypes/FSEnums';
+import { AltitudeConstraint, LegEditableData } from '@fmgc/flightplanning/data/legs';
 import { PathVector, PathVectorType } from '../PathVector';
 
 export class CRLeg extends Leg {
@@ -17,6 +17,7 @@ export class CRLeg extends Leg {
         public readonly course: DegreesTrue,
         public readonly origin: { coordinates: Coordinates, ident: string, theta: DegreesMagnetic },
         public readonly radial: DegreesTrue,
+        public readonly editableData: Readonly<LegEditableData>,
         segment: SegmentType,
         constrainedTurnDirection = TurnDirection.Unknown,
     ) {
@@ -127,10 +128,6 @@ export class CRLeg extends Leg {
         const dtg = courseToFixDistanceToGo(ppos, this.course, this.getPathEndPoint());
 
         return dtg >= 0 && dtg <= this.distance;
-    }
-
-    get speedConstraint(): SpeedConstraint | undefined {
-        return undefined;
     }
 
     get repr(): string {

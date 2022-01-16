@@ -10,10 +10,10 @@ import { Geometry } from '@fmgc/guidance/Geometry';
 import { AltitudeDescriptor, TurnDirection } from '@fmgc/types/fstypes/FSEnums';
 import { SegmentType } from '@fmgc/wtsdk';
 import { arcDistanceToGo, arcGuidance, courseToFixDistanceToGo, courseToFixGuidance, maxBank } from '@fmgc/guidance/lnav/CommonGeometry';
-import { AltitudeConstraint, getAltitudeConstraintFromWaypoint, getSpeedConstraintFromWaypoint, SpeedConstraint } from '@fmgc/guidance/lnav/legs/index';
 import { Guidable } from '@fmgc/guidance/Guidable';
 import { XFLeg } from '@fmgc/guidance/lnav/legs/XF';
 import { LnavConfig } from '@fmgc/guidance/LnavConfig';
+import { LegEditableData } from '@fmgc/flightplanning/data/legs';
 import { PathVector, PathVectorType } from '../PathVector';
 
 interface HxGeometry {
@@ -51,7 +51,11 @@ export class HMLeg extends XFLeg {
 
     private immExitRequested = false;
 
-    constructor(public to: WayPoint, public segment: SegmentType) {
+    constructor(
+        public to: WayPoint,
+        public readonly editableData: Readonly<LegEditableData>,
+        public segment: SegmentType,
+    ) {
         super(to);
     }
 
@@ -373,14 +377,6 @@ export class HMLeg extends XFLeg {
         return false;
     }
 
-    get speedConstraint(): SpeedConstraint | undefined {
-        return getSpeedConstraintFromWaypoint(this.to);
-    }
-
-    get altitudeConstraint(): AltitudeConstraint | undefined {
-        return getAltitudeConstraintFromWaypoint(this.to);
-    }
-
     getPathStartPoint(): Coordinates {
         return this.to.infos.coordinates;
     }
@@ -402,8 +398,12 @@ export class HMLeg extends XFLeg {
 export class HALeg extends HMLeg {
     private targetAltitude: Feet;
 
-    constructor(public to: WayPoint, public segment: SegmentType) {
-        super(to, segment);
+    constructor(
+        public to: WayPoint,
+        public readonly editableData: Readonly<LegEditableData>,
+        public segment: SegmentType,
+    ) {
+        super(to, editableData, segment);
 
         // the term altitude is guaranteed to be at or above, and in field altitude1, by ARINC424 coding rules
         if (this.to.legAltitudeDescription !== AltitudeDescriptor.AtOrAbove) {

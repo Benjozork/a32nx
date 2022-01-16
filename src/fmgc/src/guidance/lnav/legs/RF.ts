@@ -1,14 +1,9 @@
 import { GuidanceParameters } from '@fmgc/guidance/ControlLaws';
-import {
-    AltitudeConstraint,
-    SpeedConstraint,
-    getAltitudeConstraintFromWaypoint,
-    getSpeedConstraintFromWaypoint,
-} from '@fmgc/guidance/lnav/legs';
 import { SegmentType } from '@fmgc/wtsdk';
 import { Coordinates } from '@fmgc/flightplanning/data/geo';
 import { arcDistanceToGo, arcGuidance } from '@fmgc/guidance/lnav/CommonGeometry';
 import { XFLeg } from '@fmgc/guidance/lnav/legs/XF';
+import { LegEditableData } from '@fmgc/flightplanning/data/legs';
 import { PathVector, PathVectorType } from '../PathVector';
 
 export class RFLeg extends XFLeg {
@@ -31,7 +26,13 @@ export class RFLeg extends XFLeg {
 
     private computedPath: PathVector[] = [];
 
-    constructor(from: WayPoint, to: WayPoint, center: LatLongData, segment: SegmentType) {
+    constructor(
+        from: WayPoint,
+        to: WayPoint,
+        center: LatLongData,
+        public readonly editableData: Readonly<LegEditableData>,
+        segment: SegmentType,
+    ) {
         super(to);
 
         this.from = from;
@@ -106,14 +107,6 @@ export class RFLeg extends XFLeg {
 
     get distance(): NauticalMiles {
         return this.mDistance;
-    }
-
-    get speedConstraint(): SpeedConstraint | undefined {
-        return getSpeedConstraintFromWaypoint(this.to);
-    }
-
-    get altitudeConstraint(): AltitudeConstraint | undefined {
-        return getAltitudeConstraintFromWaypoint(this.to);
     }
 
     // basically straight from type 1 transition... willl need refinement

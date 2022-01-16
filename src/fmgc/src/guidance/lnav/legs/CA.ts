@@ -1,4 +1,3 @@
-import { AltitudeConstraint, SpeedConstraint } from '@fmgc/guidance/lnav/legs/index';
 import { Coordinates } from '@fmgc/flightplanning/data/geo';
 import { Guidable } from '@fmgc/guidance/Guidable';
 import { SegmentType } from '@fmgc/flightplanning/FlightPlanSegment';
@@ -8,6 +7,7 @@ import { LnavConfig } from '@fmgc/guidance/LnavConfig';
 import { courseToFixDistanceToGo, courseToFixGuidance } from '@fmgc/guidance/lnav/CommonGeometry';
 import { IFLeg } from '@fmgc/guidance/lnav/legs/IF';
 import { TurnDirection } from '@fmgc/types/fstypes/FSEnums';
+import { AltitudeConstraint, LegEditableData } from '@fmgc/flightplanning/data/legs';
 import { PathVector, PathVectorType } from '../PathVector';
 
 export class CALeg extends Leg {
@@ -18,6 +18,7 @@ export class CALeg extends Leg {
     constructor(
         public readonly course: Degrees,
         public readonly altitude: Feet,
+        public readonly editableData: Readonly<LegEditableData>,
         segment: SegmentType,
         constrainedTurnDirection = TurnDirection.Unknown,
     ) {
@@ -162,10 +163,6 @@ export class CALeg extends Leg {
 
     isAbeam(_ppos: Coordinates): boolean {
         return false;
-    }
-
-    get speedConstraint(): SpeedConstraint | undefined {
-        return undefined;
     }
 
     get repr(): string {
