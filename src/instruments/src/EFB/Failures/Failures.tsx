@@ -14,8 +14,8 @@ interface ATAFailureCardProps {
 }
 
 const ATAChapterCard = ({ ataNumber, description, title }: ATAFailureCardProps) => (
-    <Link to={`/failures/${pathify(ataNumber.toString())}`} className="flex flex-row p-2 space-x-4 rounded-md border-2 border-transparent transition duration-100 hover:border-theme-highlight">
-        <div className="flex justify-center items-center w-1/5 text-5xl font-bold rounded-md font-title bg-theme-accent">
+    <Link to={`/failures/${pathify(ataNumber.toString())}`} className="flex flex-row p-2 space-x-4 rounded-md border-2 border-transparent hover:border-theme-highlight transition duration-100">
+        <div className="flex justify-center items-center w-1/5 font-title text-5xl font-bold bg-theme-accent rounded-md">
             ATA
             {' '}
             {ataNumber}
@@ -43,7 +43,7 @@ export const Failures = () => {
                     <h1 className="font-bold">Failures</h1>
                     <h2>Full simulation of the failures below isn't yet guaranteed.</h2>
                 </div>
-                <div className="p-4 mt-4 rounded-lg border-2 border-theme-accent h-content-section-reduced">
+                <div className="p-4 mt-4 h-content-section-reduced rounded-lg border-2 border-theme-accent">
                     <ScrollableContainer height={52}>
                         <div className="flex flex-col space-y-1">
                             {chapters.map((chapter) => (
