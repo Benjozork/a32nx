@@ -73,6 +73,8 @@
 1. [SD] Visual and functional improvements/fixes to the HYD SD page - @lukecologne (luke)
 1. [HYD] Added optional auxiliary hydraulic section in core hydraulic circuits - @Crocket63
 1. [EFB] Added SimBridge Health Check icon to Status Bar - @frankkopp (Frank Kopp)
+1. [HYD] Fix gear extending whith dual lgciu power loss - @Crocket63 (crocket)
+1. [EFB] flyPad pushback option to ignore controller inputs - @frankkopp (Frank Kopp)
 1. [RMP] RMPs navigation backup - Julian Sebline (Julian Sebline#8476 on Discord)
 
 ## 0.8.0
