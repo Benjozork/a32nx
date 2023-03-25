@@ -1,0 +1,46 @@
+.mcdu-grid {
+  display: flex;
+  flex-direction: column;
+
+  margin-left: 60px;
+  margin-top: 40px;
+
+  transform: scaleX(0.94)
+}
+
+.mcdu-row {
+  display: flex;
+}
+
+.mcdu-grid, .mcdu-row {
+  font-family: HoneywellMCDU, sans-serif !important;
+}
+
+.mcdu-cell {
+  border: 1px solid yellow;
+  width: 37px;
+  height: 62px;
+  padding-left: 4px;
+
+  display: flex;
+
+  font-size: 52px;
+  text-align: center;
+}
+
+.mcdu-style-small {
+  font-family: HoneywellMCDUSmall, sans-serif !important;
+  padding-top: 3px;
+}
+
+.mcdu-style-green {
+  color: var(--displayGreen)
+}
+
+.mcdu-style.cyan {
+  color: var(--displayCyan);
+}
+
+.mcdu-style-amber {
+  color: var(--displayAmber);
+}

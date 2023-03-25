@@ -23,6 +23,7 @@ module.exports = {
         msfsAvionicsInstrument('PFD'),
         msfsAvionicsInstrument('EWD'),
         msfsAvionicsInstrument('Clock'),
+        msfsAvionicsInstrument('MCDU'),
 
         reactInstrument('ND', ['/JS/fbw-a32nx/A32NX_Util.js']),
         reactInstrument('SD'),
