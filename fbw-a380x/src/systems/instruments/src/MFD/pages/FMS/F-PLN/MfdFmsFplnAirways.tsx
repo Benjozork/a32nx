@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 ﻿import { ComponentProps, DisplayComponent, FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';
 
 import './MfdFmsFplnAirways.scss';

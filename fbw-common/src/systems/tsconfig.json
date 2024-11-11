@@ -5,12 +5,21 @@
     "resolveJsonModule" : true,
     "typeRoots": [
       "../typings",
-      "../../../node_modules/@types",
+      "../../../node_modules/@types"
     ],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
     "skipLibCheck": true,
+    "strict": false,
+    "plugins": [
+      {
+        "name": "tsc-strict"
+      },
+      {
+        "name": "typescript-strict-plugin"
+      }
+    ],
     "paths": {
       "@fmgc/*": ["../../../fbw-a32nx/src/systems/fmgc/src/*"],
       "@shared/*": ["../../../fbw-a32nx/src/systems/shared/src/*"],

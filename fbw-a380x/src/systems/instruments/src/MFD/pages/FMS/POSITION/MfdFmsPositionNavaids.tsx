@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { AbstractMfdPageProps } from 'instruments/src/MFD/MFD';
 import { Button } from 'instruments/src/MFD/pages/common/Button';
 import {

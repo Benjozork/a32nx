@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 /* eslint-disable max-len */
 
 import { ClockEvents, FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';

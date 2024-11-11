@@ -161,7 +161,7 @@ export const PressureComponent = () => {
   const cpcLandingElevation = useArinc429Var(`L:A32NX_PRESS_CPC_${activeCpcNumber}_LANDING_ELEVATION`, 500);
   const fmLandingElevation = useArinc429Var('L:A32NX_FM1_LANDING_ELEVATION', 1000);
 
-  let landingElevation;
+  let landingElevation: number;
   if (cpcLandingElevation.isNormalOperation()) {
     landingElevation = cpcLandingElevation.value;
   } else if (fmLandingElevation.isNormalOperation()) {

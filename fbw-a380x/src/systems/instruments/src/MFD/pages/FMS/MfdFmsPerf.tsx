@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { DropdownMenu } from 'instruments/src/MFD/pages/common/DropdownMenu';
 import { InputField } from 'instruments/src/MFD/pages/common/InputField';
 import { TopTabNavigator, TopTabNavigatorPage } from 'instruments/src/MFD/pages/common/TopTabNavigator';

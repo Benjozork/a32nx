@@ -11,6 +11,15 @@
       "moduleResolution": "node",
       "allowSyntheticDefaultImports": true,
       "jsx": "react",
+      "strict": false,
+      "plugins": [
+        {
+          "name": "tsc-strict"
+        },
+        {
+          "name": "typescript-strict-plugin"
+        }
+      ],
       "paths": {
         "@shared/*": ["./shared/src/*"],
         "@instruments/common/*": ["./instruments/src/Common/*"],

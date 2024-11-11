@@ -112,7 +112,7 @@ function typecheckingPlugin() {
                 const errors = []
 
                 try {
-                    childProcess.execSync('npx tsc --noEmit -p .', { cwd: tsConfigDir });
+                    childProcess.execSync('npx tsc-strict --noEmit -p .', { cwd: tsConfigDir });
                 } catch (e) {
                     if (!('stdout' in e) || !e.stdout) {
                         throw e;

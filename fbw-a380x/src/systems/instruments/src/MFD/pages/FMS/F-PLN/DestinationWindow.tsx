@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { ComponentProps, DisplayComponent, FSComponent, Subject, Subscription, VNode } from '@microsoft/msfs-sdk';
 import '../../common/style.scss';
 import { Button } from 'instruments/src/MFD/pages/common/Button';

@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 ﻿import {
   A380EfisNdRangeValue,
   Arinc429ConsumerSubject,

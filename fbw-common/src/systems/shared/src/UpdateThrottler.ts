@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 /**
  * Utility class to throttle instrument updates
  */

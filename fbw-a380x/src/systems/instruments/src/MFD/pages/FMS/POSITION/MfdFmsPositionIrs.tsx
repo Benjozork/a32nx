@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { ClockEvents, FSComponent, MappedSubject, Subject, VNode } from '@microsoft/msfs-sdk';
 
 import './MfdFmsPositionIrs.scss';

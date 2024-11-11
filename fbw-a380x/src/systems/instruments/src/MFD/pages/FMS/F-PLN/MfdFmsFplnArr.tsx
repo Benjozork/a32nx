@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';
 import { AbstractMfdPageProps } from 'instruments/src/MFD/MFD';
 import { Footer } from 'instruments/src/MFD/pages/common/Footer';

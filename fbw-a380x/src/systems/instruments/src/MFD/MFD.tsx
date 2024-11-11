@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import 'instruments/src/MFD/pages/common/style.scss';
 
 import {

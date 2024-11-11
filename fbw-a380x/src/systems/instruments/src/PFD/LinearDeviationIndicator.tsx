@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { DisplayComponent, EventBus, FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';
 import { FmsVars } from 'instruments/src/MsfsAvionicsCommon/providers/FmsDataPublisher';
 import { Arinc429Values } from 'instruments/src/PFD/shared/ArincValueProvider';

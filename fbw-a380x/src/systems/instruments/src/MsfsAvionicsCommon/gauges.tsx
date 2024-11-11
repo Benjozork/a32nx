@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { DisplayComponent, FSComponent, Subscribable, Subject, VNode } from '@microsoft/msfs-sdk';
 
 import './gauges.scss';

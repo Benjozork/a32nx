@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 ﻿import { FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';
 
 import './MfdFmsFpln.scss';

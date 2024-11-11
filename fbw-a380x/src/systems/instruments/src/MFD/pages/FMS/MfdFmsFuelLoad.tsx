@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { ClockEvents, FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';
 
 import './MfdFmsFuelLoad.scss';

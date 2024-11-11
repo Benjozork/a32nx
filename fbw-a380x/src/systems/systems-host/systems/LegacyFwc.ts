@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
 // TODO remove this once Rust implementation is up and running

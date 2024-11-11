@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { ComponentProps, DisplayComponent, FSComponent, VNode } from '@microsoft/msfs-sdk';
 
 interface ShapeProps extends ComponentProps {

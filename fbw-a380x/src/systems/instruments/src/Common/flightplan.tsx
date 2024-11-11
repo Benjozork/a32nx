@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import React, { useContext, useEffect, useState } from 'react';
 import { ExternalBackend, Database } from 'msfs-navdata';
 import { useUpdate } from '@instruments/common/hooks';

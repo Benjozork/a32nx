@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { EventBus, FSComponent, Subscribable, VNode } from '@microsoft/msfs-sdk';
 
 // Page imports

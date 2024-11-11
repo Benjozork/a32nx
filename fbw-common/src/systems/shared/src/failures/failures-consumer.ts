@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { QueuedSimVarReader, SimVarReaderWriter } from './communication';
 import { getActivateFailureSimVarName, getDeactivateFailureSimVarName } from './sim-vars';
 

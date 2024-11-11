@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { CallbackReader, Reader } from '.';
 import { Writer } from './writer';
 

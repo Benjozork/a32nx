@@ -2,6 +2,11 @@
 //
 // SPDX-License-Identifier: GPL-3.0
 
+// @ts-strict-ignore
+// Copyright (c) 2021-2024 FlyByWire Simulations
+//
+// SPDX-License-Identifier: GPL-3.0
+
 /* eslint-disable no-await-in-loop */
 // Copyright (c) 2022 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0

@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { FlightPlanIndex } from '@fmgc/flightplanning/FlightPlanManager';
 import { FlightPlan } from '@fmgc/flightplanning/plans/FlightPlan';
 import { DisplayComponent, FSComponent, Subject, Subscription, VNode } from '@microsoft/msfs-sdk';

@@ -6,11 +6,20 @@
     "skipLibCheck": true,
     "typeRoots": [
       "../../../fbw-common/src/typings",
-      "../../../node_modules/@types",
+      "../../../node_modules/@types"
     ],
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "jsx": "react",
+    "strict": false,
+    "plugins": [
+      {
+        "name": "tsc-strict"
+      },
+      {
+        "name": "typescript-strict-plugin"
+      }
+    ],
     "paths": {
       "@datalink/aoc": ["../../../fbw-common/src/systems/datalink/aoc/src/index.ts"],
       "@datalink/atc": ["../../../fbw-common/src/systems/datalink/atc/src/index.ts"],

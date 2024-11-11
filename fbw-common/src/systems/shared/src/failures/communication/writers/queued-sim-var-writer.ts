@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { Queue } from './queue';
 import { Reader, Writer } from '..';
 

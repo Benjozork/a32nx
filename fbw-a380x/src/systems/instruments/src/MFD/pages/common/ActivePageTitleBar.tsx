@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { ComponentProps, DisplayComponent, FSComponent, Subscribable, Subscription, VNode } from '@microsoft/msfs-sdk';
 import './style.scss';
 

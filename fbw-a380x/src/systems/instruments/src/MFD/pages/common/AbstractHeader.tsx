@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { DisplayInterface } from '@fmgc/flightplanning/interface/DisplayInterface';
 import {
   ArraySubject,

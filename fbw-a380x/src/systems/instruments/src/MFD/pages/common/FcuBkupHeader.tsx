@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';
 import { AbstractHeader } from 'instruments/src/MFD/pages/common/AbstractHeader';
 import { PageSelectorDropdownMenu } from 'instruments/src/MFD/pages/common/PageSelectorDropdownMenu';

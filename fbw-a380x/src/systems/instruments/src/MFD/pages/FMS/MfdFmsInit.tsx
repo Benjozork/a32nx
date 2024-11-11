@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { FSComponent, MappedSubject, Subject, Subscribable, VNode } from '@microsoft/msfs-sdk';
 
 import './MfdFmsInit.scss';
