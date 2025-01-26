@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { ArraySubject, DisplayComponent, FSComponent, Subject, VNode } from '@microsoft/msfs-sdk';
 
 import './MfdAtccomConnect.scss';

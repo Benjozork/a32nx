@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import {
   FSComponent,
   EventBus,

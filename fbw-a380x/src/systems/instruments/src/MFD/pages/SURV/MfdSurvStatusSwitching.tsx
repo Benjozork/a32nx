@@ -1,3 +1,4 @@
+// @ts-strict-ignore
 import { ConsumerSubject, DisplayComponent, FSComponent, Subject, Subscription, VNode } from '@microsoft/msfs-sdk';
 
 import './MfdSurvStatusSwitching.scss';
