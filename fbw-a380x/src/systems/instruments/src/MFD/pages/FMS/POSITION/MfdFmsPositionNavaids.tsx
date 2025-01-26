@@ -1,6 +1,6 @@
 // @ts-strict-ignore
 import { AbstractMfdPageProps } from 'instruments/src/MFD/MFD';
-import { Button } from 'instruments/src/MFD/pages/common/Button';
+import { Button } from 'instruments/src/MsfsAvionicsCommon/UiWidgets/Button';
 import {
   FrequencyILSFormat,
   FrequencyVORDMEFormat,
@@ -10,8 +10,8 @@ import {
 } from 'instruments/src/MFD/pages/common/DataEntryFormats';
 import { FmsPage } from 'instruments/src/MFD/pages/common/FmsPage';
 import { Footer } from 'instruments/src/MFD/pages/common/Footer';
-import { InputField } from 'instruments/src/MFD/pages/common/InputField';
-import { TopTabNavigator, TopTabNavigatorPage } from 'instruments/src/MFD/pages/common/TopTabNavigator';
+import { InputField } from 'instruments/src/MsfsAvionicsCommon/UiWidgets/InputField';
+import { TopTabNavigator, TopTabNavigatorPage } from 'instruments/src/MsfsAvionicsCommon/UiWidgets/TopTabNavigator';
 import { MfdSimvars } from 'instruments/src/MFD/shared/MFDSimvarPublisher';
 import { NXSystemMessages } from 'instruments/src/MFD/shared/NXSystemMessages';
 

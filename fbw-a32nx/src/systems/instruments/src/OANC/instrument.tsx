@@ -88,8 +88,6 @@ class A32NX_OANC extends BaseInstrument {
 
   private readonly controlPanelVisible = Subject.create(false);
 
-  private readonly oansMessageScreenRef = FSComponent.createRef<HTMLDivElement>();
-
   constructor() {
     super();
     this.efisSide = getDisplayIndex() === 1 ? 'L' : 'R';
@@ -123,9 +121,6 @@ class A32NX_OANC extends BaseInstrument {
         class="oanc-container"
         style={`width: ${OANC_RENDER_WIDTH}px; height: ${OANC_RENDER_HEIGHT}px; overflow: hidden`}
       >
-        <div ref={this.oansMessageScreenRef} class="oanc-message-screen">
-          PLEASE WAIT
-        </div>
         <Oanc
           bus={this.bus}
           side={this.efisSide}
@@ -134,7 +129,6 @@ class A32NX_OANC extends BaseInstrument {
           contextMenuItems={this.contextMenuItems}
           contextMenuX={this.contextMenuX}
           contextMenuY={this.contextMenuY}
-          messageScreenRef={this.oansMessageScreenRef}
           zoomValues={a320EfisZoomRangeSettings}
         />
         <ControlPanel

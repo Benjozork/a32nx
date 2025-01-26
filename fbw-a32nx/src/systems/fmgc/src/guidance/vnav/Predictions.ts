@@ -40,7 +40,7 @@ export class Predictions {
    * @param stepSize the size of the altitude step, in feet
    * @param econCAS airspeed during climb (taking SPD LIM & restrictions into account)
    * @param econMach mach during climb, after passing crossover altitude
-   * @param commandedN1 N1% at CLB (or idle) setting, depending on flight phase
+   * @param correctedCommandedN1 Corrected N1% at CLB (or idle) setting, depending on flight phase
    * @param zeroFuelWeight zero fuel weight of the aircraft (from INIT B)
    * @param initialFuelWeight weight of fuel at the end of last step
    * @param headwindAtMidStepAlt headwind component (in knots) at initialAltitude + (stepSize / 2); tailwind is negative
@@ -57,7 +57,7 @@ export class Predictions {
     stepSize: number,
     econCAS: number,
     econMach: number,
-    commandedN1: number,
+    correctedCommandedN1: number,
     zeroFuelWeight: number,
     initialFuelWeight: number,
     headwindAtMidStepAlt: number,
@@ -88,13 +88,12 @@ export class Predictions {
     // Engine model calculations
     const theta2 = Common.getTheta2(theta, mach);
     const delta2 = Common.getDelta2(delta, mach);
-    const correctedN1 = EngineModel.getCorrectedN1(commandedN1, theta2);
     const correctedThrust =
-      EngineModel.tableInterpolation(EngineModel.table1506, correctedN1, mach) *
+      EngineModel.tableInterpolation(config.engineModelParameters.table1506, correctedCommandedN1, mach) *
       config.engineModelParameters.numberOfEngines *
       config.engineModelParameters.maxThrust;
     const correctedFuelFlow =
-      EngineModel.getCorrectedFuelFlow(config.engineModelParameters, correctedN1, mach, midStepAltitude) *
+      EngineModel.getCorrectedFuelFlow(config.engineModelParameters, correctedCommandedN1, mach, midStepAltitude) *
       config.engineModelParameters.numberOfEngines;
     const thrust = EngineModel.getUncorrectedThrust(correctedThrust, delta2); // in lbf
     const fuelFlow = Math.max(
@@ -162,7 +161,7 @@ export class Predictions {
    * @param distance distance to travel during step, in nautical miles
    * @param econCAS corrected airspeed at the start of the step, in knots
    * @param econMach mach during climb, after passing crossover altitude
-   * @param commandedN1 N1% at CLB (or idle) setting, depending on flight phase
+   * @param commandedCorrectedN1 N1% at CLB (or idle) setting, depending on flight phase
    * @param zeroFuelWeight zero fuel weight of the aircraft (from INIT FUEL PRED)
    * @param initialFuelWeight weight of fuel at the end of last step
    * @param headwindAtMidStepAlt headwind component (in knots) at initialAltitude + (stepSize / 2); tailwind is negative
@@ -179,7 +178,7 @@ export class Predictions {
     distance: number,
     econCAS: number,
     econMach: number,
-    commandedN1: number,
+    commandedCorrectedN1: number,
     zeroFuelWeight: number,
     initialFuelWeight: number,
     headwindAtMidStepAlt: number,
@@ -224,13 +223,12 @@ export class Predictions {
       // Engine model calculations
       const theta2 = Common.getTheta2(theta, mach);
       const delta2 = Common.getDelta2(delta, mach);
-      const correctedN1 = EngineModel.getCorrectedN1(commandedN1, theta2);
       const correctedThrust =
-        EngineModel.tableInterpolation(EngineModel.table1506, correctedN1, mach) *
+        EngineModel.tableInterpolation(config.engineModelParameters.table1506, commandedCorrectedN1, mach) *
         config.engineModelParameters.numberOfEngines *
         config.engineModelParameters.maxThrust;
       const correctedFuelFlow =
-        EngineModel.getCorrectedFuelFlow(config.engineModelParameters, correctedN1, mach, initialAltitude) *
+        EngineModel.getCorrectedFuelFlow(config.engineModelParameters, commandedCorrectedN1, mach, initialAltitude) *
         config.engineModelParameters.numberOfEngines;
       const thrust = EngineModel.getUncorrectedThrust(correctedThrust, delta2); // in lbf
       const fuelFlow = Math.max(
@@ -344,7 +342,7 @@ export class Predictions {
     const correctedThrust = thrust / delta2 / 2;
     // Since table 1506 describes corrected thrust as a fraction of max thrust, divide it
     const correctedN1 = EngineModel.reverseTableInterpolation(
-      EngineModel.table1506,
+      config.engineModelParameters.table1506,
       mach,
       correctedThrust / config.engineModelParameters.maxThrust,
     );
@@ -379,7 +377,7 @@ export class Predictions {
    * @param finalCAS airspeed at end of step
    * @param initialMach initial mach, above crossover altitude
    * @param finalMach final mach, above crossover altitude
-   * @param commandedN1 N1% at CLB (or idle) setting, depending on flight phase
+   * @param commandedCorrectedN1 Corrected N1% at CLB (or idle) setting, depending on flight phase
    * @param zeroFuelWeight zero fuel weight of the aircraft (from INIT B)
    * @param initialFuelWeight weight of fuel at the end of last step
    * @param headwindAtInitialAltitude headwind component (in knots) at initialAltitude
@@ -399,7 +397,7 @@ export class Predictions {
     finalCAS: number,
     initialMach: number,
     finalMach: number,
-    commandedN1: number,
+    commandedCorrectedN1: number,
     zeroFuelWeight: number,
     initialFuelWeight: number,
     headwindAtInitialAltitude: number,
@@ -440,14 +438,17 @@ export class Predictions {
     // Engine model calculations
     const theta2 = Common.getTheta2(theta, averageMach);
     const delta2 = Common.getDelta2(delta, averageMach);
-    const correctedN1 = EngineModel.getCorrectedN1(commandedN1, theta2);
     const correctedThrust =
-      EngineModel.tableInterpolation(EngineModel.table1506, correctedN1, averageMach) *
+      EngineModel.tableInterpolation(config.engineModelParameters.table1506, commandedCorrectedN1, averageMach) *
       config.engineModelParameters.numberOfEngines *
       config.engineModelParameters.maxThrust;
     const correctedFuelFlow =
-      EngineModel.getCorrectedFuelFlow(config.engineModelParameters, correctedN1, averageMach, initialAltitude) *
-      config.engineModelParameters.numberOfEngines;
+      EngineModel.getCorrectedFuelFlow(
+        config.engineModelParameters,
+        commandedCorrectedN1,
+        averageMach,
+        initialAltitude,
+      ) * config.engineModelParameters.numberOfEngines;
     const thrust = EngineModel.getUncorrectedThrust(correctedThrust, delta2); // in lbf
     const fuelFlow = Math.max(
       0,
@@ -628,7 +629,7 @@ export class Predictions {
       const correctedThrust = thrust / delta2 / config.engineModelParameters.numberOfEngines;
       // Since table 1506 describes corrected thrust as a fraction of max thrust, divide it
       const correctedN1 = EngineModel.reverseTableInterpolation(
-        EngineModel.table1506,
+        config.engineModelParameters.table1506,
         mach,
         correctedThrust / config.engineModelParameters.maxThrust,
       );
@@ -744,7 +745,7 @@ export class Predictions {
       const correctedThrust = thrust / delta2 / config.engineModelParameters.numberOfEngines;
       // Since table 1506 describes corrected thrust as a fraction of max thrust, divide it
       predictedN1 = EngineModel.reverseTableInterpolation(
-        EngineModel.table1506,
+        config.engineModelParameters.table1506,
         mach,
         correctedThrust / config.engineModelParameters.maxThrust,
       );
@@ -861,7 +862,7 @@ export class Predictions {
       const correctedThrust = thrust / delta2 / config.engineModelParameters.numberOfEngines;
       // Since table 1506 describes corrected thrust as a fraction of max thrust, divide it
       predictedN1 = EngineModel.reverseTableInterpolation(
-        EngineModel.table1506,
+        config.engineModelParameters.table1506,
         mach,
         correctedThrust / config.engineModelParameters.maxThrust,
       );
@@ -900,7 +901,7 @@ export class Predictions {
    * @param finalCAS airspeed at end of step
    * @param verticalSpeed vertical speed during step, in feet per minute
    * @param econMach mach during step
-   * @param commandedN1 N1% at CLB (or idle) setting, depending on flight phase
+   * @param commandedCorrectedN1 Corrected N1% at CLB (or idle) setting, depending on flight phase
    * @param zeroFuelWeight zero fuel weight of the aircraft (from INIT B)
    * @param initialFuelWeight weight of fuel at the end of last step
    * @param headwindAtMidStepAlt headwind component (in knots)
@@ -918,7 +919,7 @@ export class Predictions {
     finalCAS: number,
     verticalSpeed: number,
     econMach: number,
-    commandedN1: number,
+    commandedCorrectedN1: number,
     zeroFuelWeight: number,
     initialFuelWeight: number,
     headwindAtMidStepAlt: number,
@@ -973,14 +974,17 @@ export class Predictions {
       // Engine model calculations
       const theta2 = Common.getTheta2(theta, midwayMach);
       const delta2 = Common.getDelta2(delta, midwayMach);
-      const correctedN1 = EngineModel.getCorrectedN1(commandedN1, theta2);
       const correctedThrust =
-        EngineModel.tableInterpolation(EngineModel.table1506, correctedN1, midwayMach) *
+        EngineModel.tableInterpolation(config.engineModelParameters.table1506, commandedCorrectedN1, midwayMach) *
         config.engineModelParameters.numberOfEngines *
         config.engineModelParameters.maxThrust;
       const correctedFuelFlow =
-        EngineModel.getCorrectedFuelFlow(config.engineModelParameters, correctedN1, midwayMach, midStepAltitude) *
-        config.engineModelParameters.numberOfEngines;
+        EngineModel.getCorrectedFuelFlow(
+          config.engineModelParameters,
+          commandedCorrectedN1,
+          midwayMach,
+          midStepAltitude,
+        ) * config.engineModelParameters.numberOfEngines;
       const thrust = EngineModel.getUncorrectedThrust(correctedThrust, delta2); // in lbf
       const fuelFlow = Math.max(
         0,
@@ -1036,7 +1040,7 @@ export class Predictions {
    * @param initialCAS airspeed at beginning of step
    * @param finalCAS airspeed at end of step
    * @param econMach mach during step
-   * @param commandedN1 N1% at CLB (or idle) setting, depending on flight phase
+   * @param commandedCorrectedN1 Corrected N1% at CLB (or idle) setting, depending on flight phase
    * @param zeroFuelWeight zero fuel weight of the aircraft (from INIT B)
    * @param initialFuelWeight weight of fuel at the end of last step
    * @param headwindAtMidStepAlt headwind component (in knots)
@@ -1053,7 +1057,7 @@ export class Predictions {
     initialCAS: number,
     finalCAS: number,
     econMach: number,
-    commandedN1: number,
+    commandedCorrectedN1: number,
     zeroFuelWeight: number,
     initialFuelWeight: number,
     headwindAtMidStepAlt: number,
@@ -1110,14 +1114,17 @@ export class Predictions {
       // Engine model calculations
       const theta2 = Common.getTheta2(theta, midwayMach);
       const delta2 = Common.getDelta2(delta, midwayMach);
-      const correctedN1 = EngineModel.getCorrectedN1(commandedN1, theta2);
       const correctedThrust =
-        EngineModel.tableInterpolation(EngineModel.table1506, correctedN1, midwayMach) *
+        EngineModel.tableInterpolation(config.engineModelParameters.table1506, commandedCorrectedN1, midwayMach) *
         config.engineModelParameters.numberOfEngines *
         config.engineModelParameters.maxThrust;
       const correctedFuelFlow =
-        EngineModel.getCorrectedFuelFlow(config.engineModelParameters, correctedN1, midwayMach, midStepAltitude) *
-        config.engineModelParameters.numberOfEngines;
+        EngineModel.getCorrectedFuelFlow(
+          config.engineModelParameters,
+          commandedCorrectedN1,
+          midwayMach,
+          midStepAltitude,
+        ) * config.engineModelParameters.numberOfEngines;
       const thrust = EngineModel.getUncorrectedThrust(correctedThrust, delta2); // in lbf
       const fuelFlow = Math.max(
         0,

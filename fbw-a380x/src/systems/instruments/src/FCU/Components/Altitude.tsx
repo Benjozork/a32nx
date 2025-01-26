@@ -20,7 +20,7 @@ export class Altitude extends DisplayComponent<AltitudeProps> {
   private readonly altText = MappedSubject.create(
     ([isLightTest, altitude]) => {
       if (isLightTest) {
-        return '88888';
+        return '8.8.8.8.8';
       }
       const value = Math.floor(Math.max(altitude, 100));
       return value.toString().padStart(5, '0');
@@ -36,7 +36,7 @@ export class Altitude extends DisplayComponent<AltitudeProps> {
           <text id="ALT" class="Common Active" x="31%" y="20%">
             ALT
           </text>
-          <text id="Value" class="Common Value" x="4%" y="86%">
+          <text id="Value" class="Common Value" x="4%" y="97%">
             {this.altText}
           </text>
         </svg>

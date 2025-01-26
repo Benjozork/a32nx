@@ -1,6 +1,6 @@
 // @ts-strict-ignore
 import { DisplayComponent, EventBus, FSComponent, SimVarValueType, VNode } from '@microsoft/msfs-sdk';
-import { IconButton } from 'instruments/src/MFD/pages/common/IconButton';
+import { IconButton } from 'instruments/src/MsfsAvionicsCommon/UiWidgets/IconButton';
 import { EwdSimvars } from 'instruments/src/EWD/shared/EwdSimvarPublisher';
 import { NXDataStore } from '@flybywiresim/fbw-sdk';
 

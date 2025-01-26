@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: GPL-3.0
 
 import {
+  BackplanePublisher,
   EventBus,
   EventSubscriber,
   Publisher,
@@ -54,7 +55,7 @@ export interface PowerSupplyBusTypes {
   dcBusEss: boolean;
 }
 
-export class PowerSupplyBusses {
+export class PowerSupplyBusses implements BackplanePublisher {
   private simVarPublisher: PowerSupplySimvarPublisher = null;
 
   private subscriber: EventSubscriber<PowerSupplySimvars> = null;
@@ -95,22 +96,12 @@ export class PowerSupplyBusses {
       .handle((powered: number) => this.publisher.pub('dcBusEss', powered !== 0, false, false));
   }
 
-  public connectedCallback(): void {
-    this.initialize();
-
-    this.simVarPublisher.subscribe('msfsAcBus1');
-    this.simVarPublisher.subscribe('msfsAcBus2');
-    this.simVarPublisher.subscribe('msfsAcBusEss');
-    this.simVarPublisher.subscribe('msfsDcBus1');
-    this.simVarPublisher.subscribe('msfsDcBus2');
-    this.simVarPublisher.subscribe('msfsDcBusEss');
-  }
-
   public startPublish(): void {
+    this.initialize();
     this.simVarPublisher.startPublish();
   }
 
-  public update(): void {
+  public onUpdate(): void {
     this.simVarPublisher.onUpdate();
   }
 }
