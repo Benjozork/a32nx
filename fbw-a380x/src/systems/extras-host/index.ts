@@ -18,6 +18,7 @@ import {
   BaroUnitSelector,
   TelexCheck,
   PilotSeatPublisher,
+  FlypadServer,
 } from '@flybywiresim/fbw-sdk';
 import { PushbuttonCheck } from 'extras-host/modules/pushbutton_check/PushbuttonCheck';
 import { A380XKeyInterceptor } from './modules/key_interceptor/KeyInterceptor';
@@ -99,6 +100,8 @@ class ExtrasHost extends BaseInstrument {
   });
 
   private readonly gsxSync = new GsxSyncA380X(this.bus);
+
+  private readonly flypadServer = new FlypadServer(this.bus);
 
   /**
    * "mainmenu" = 0

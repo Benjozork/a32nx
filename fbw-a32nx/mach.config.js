@@ -37,6 +37,7 @@ module.exports = {
     msfsAvionicsInstrument('ND'),
     msfsAvionicsInstrument('OANC'),
     msfsAvionicsInstrument('PFD'),
+    msfsAvionicsInstrument('EFBv4', 'instrument.tsx'),
 
     reactInstrument('SD'),
     reactInstrument('DCDU'),

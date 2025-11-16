@@ -1,3 +1,7 @@
+// Copyright (c) 2021-2025 FlyByWire Simulations
+//
+// SPDX-License-Identifier: GPL-3.0
+
 // @ts-strict-ignore
 // Copyright (c) 2021-2024 FlyByWire Simulations
 //
@@ -12,6 +16,7 @@ import {
   BaroUnitSelector,
   ExtrasSimVarPublisher,
   FlightDeckBounds,
+  FlypadServer,
   GPUManagement,
   GroundSupportPublisher,
   GsxSimVarPublisher,
@@ -110,6 +115,8 @@ class ExtrasHost extends BaseInstrument {
   });
 
   private readonly gsxSync = new GsxSyncA32NX(this.bus);
+
+  private readonly flypadServer = new FlypadServer(this.bus);
 
   /**
    * "mainmenu" = 0
