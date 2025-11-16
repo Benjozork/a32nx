@@ -1,10 +1,11 @@
 import { FlypadClient } from '@shared/flypad-server';
 import { ArraySubject, Subject, Subscribable, SubscribableArray } from '@microsoft/msfs-sdk';
-import { ISimbriefData, simbriefDataParser } from '../../EFB/Apis/Simbrief';
 import { ChartProvider, ChartsError, FlypadChartIndex, FlypadChart } from '../Pages/Navigation/ChartProvider';
 import { DeviceFlowParams, User } from 'navigraph/auth';
 import { navigraphAuth } from '../../navigraph';
 import { NotificationKind, showNotification } from '../Components';
+import { ISimbriefData } from '@shared/Simbrief/simbriefInterface';
+import { simbriefDataParser } from '@shared/Simbrief/simbriefParser';
 
 export class SimbriefState {
   constructor(private readonly client: FlypadClient) {}
