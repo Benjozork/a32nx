@@ -1,4 +1,5 @@
-import { EventSubscriber, MappedSubject, MathUtils, Subject, Subscribable, UserSetting } from '@microsoft/msfs-sdk';
+import { EventSubscriber, MappedSubject, MathUtils, Subject, Subscribable } from '@microsoft/msfs-sdk';
+
 import { ModalKind, showModal } from 'instruments/src/EFBv4/Components/Modal';
 import { EFBSimvars } from 'instruments/src/EFBv4/EFBSimvarPublisher';
 
@@ -62,7 +63,7 @@ export class PowerManager {
   private isCharging: Subject<boolean>;
   private charge: Subject<number>;
 
-  constructor(efbSimvarSubscriber: EventSubscriber<EFBSimvars>, batteryLifeEnabled: UserSetting<boolean>) {
+  constructor(efbSimvarSubscriber: EventSubscriber<EFBSimvars>, batteryLifeEnabled: Subscribable<boolean>) {
     this.isCharging = Subject.create(SimVar.GetSimVarValue('L:A32NX_ELEC_DC_2_BUS_IS_POWERED', 'bool'));
 
     this.battery = new Battery(100, SimVar.GetSimVarValue('E:ABSOLUTE TIME', 'seconds'));

@@ -10,6 +10,7 @@ import {
   PilotSeatConfig,
   usePersistentNumberProperty,
   usePersistentProperty,
+  usePersistentSetting,
   useSimVar,
 } from '@flybywiresim/fbw-sdk';
 
@@ -31,10 +32,10 @@ export const SimOptionsPage = () => {
   const [defaultBaro, setDefaultBaro] = usePersistentProperty('CONFIG_INIT_BARO_UNIT', 'AUTO');
   const [dynamicRegistration, setDynamicRegistration] = usePersistentProperty('DYNAMIC_REGISTRATION_DECAL', '0');
   const [fpSync, setFpSync] = usePersistentProperty('FP_SYNC', 'LOAD');
-  const [simbridgeRemote, setSimbridgeRemoteStatus] = usePersistentProperty('CONFIG_SIMBRIDGE_REMOTE', 'local');
+  const [simbridgeRemote, setSimbridgeRemoteStatus] = usePersistentSetting('CONFIG_SIMBRIDGE_REMOTE');
   const [simbridgeIp, setSimbridgeIp] = usePersistentProperty('CONFIG_SIMBRIDGE_IP', 'localhost');
   const [simbridgePort, setSimbridgePort] = usePersistentProperty('CONFIG_SIMBRIDGE_PORT', '8380');
-  const [simbridgeEnabled, setSimbridgeEnabled] = usePersistentProperty('CONFIG_SIMBRIDGE_ENABLED', 'AUTO ON');
+  const [simbridgeEnabled, setSimbridgeEnabled] = usePersistentSetting('CONFIG_SIMBRIDGE_ENABLED');
   const [radioReceiverUsage, setRadioReceiverUsage] = usePersistentProperty('RADIO_RECEIVER_USAGE_ENABLED', '0');
   const [, setRadioReceiverUsageSimVar] = useSimVar('L:A32NX_RADIO_RECEIVER_USAGE_ENABLED', 'number', 0);
   const [fdrEnabled, setFdrEnabled] = usePersistentProperty('FDR_ENABLED', '1');

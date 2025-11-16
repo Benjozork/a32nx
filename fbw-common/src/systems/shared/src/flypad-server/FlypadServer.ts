@@ -6,7 +6,6 @@ import { MetarParserType } from '../../../instruments/src';
 import { parseMetar } from '../parseMetar';
 import { Runway } from '../../../instruments/src/EFB/Performance/Data/Runways';
 import { RunwayDesignatorChar } from '../navdata';
-import { MetarSource } from '../../../instruments/src/EFBv4/FbwUserSettings';
 import { ConfigWeatherMap } from '../config';
 
 export class FlypadServer {
@@ -31,10 +30,16 @@ export class FlypadServer {
     // noop
   }
 
-  private async handleGetMetar({ icao, source }: { icao: string; source: MetarSource }): Promise<void> {
+  private async handleGetMetar({
+    icao,
+    source,
+  }: {
+    icao: string;
+    source: 'MSFS' | 'NOAA' | 'PILOTEDGE' | 'VATSIM';
+  }): Promise<void> {
     let metar: MetarParserType | undefined;
     switch (source) {
-      case MetarSource.MSFS: {
+      case 'MSFS': {
         let msfsMetar: MsfsMetar | undefined;
 
         // Catch parsing error separately

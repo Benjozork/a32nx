@@ -1,6 +1,6 @@
-import { Health, SimBridgeClientState } from '@flybywiresim/fbw-sdk';
-import { EventBus, UserSettingManager } from '@microsoft/msfs-sdk';
-import { FbwUserSettingsDefs, SimBridgeMode } from '../../../../instruments/src/EFBv4/FbwUserSettings';
+import { EventBus } from '@microsoft/msfs-sdk';
+
+import { Health, NXDataStore, SimBridgeClientState } from '@flybywiresim/fbw-sdk';
 
 export interface SimbridgeStateEvents {
   /** Whether SimBridge is available */
@@ -16,7 +16,7 @@ export class SimBridgeStatePublisher {
   private available: boolean = false;
 
   // SimBridge Connect setting
-  private simBridgeEnabledSetting = SimBridgeMode.AutoOn;
+  private simbridgeEnabledSetting = NXDataStore.getSetting('CONFIG_SIMBRIDGE_ENABLED');
 
   // counter for failed connection attempts
   private connectionAttemptCounter: number = 0;
@@ -27,33 +27,29 @@ export class SimBridgeStatePublisher {
   // Indicates the state of the client connection to the SimBridge server
   private simBridgeState: SimBridgeClientState = SimBridgeClientState.OFF;
 
-  constructor(
-    private readonly bus: EventBus,
-    private readonly fbwSettingsManager: UserSettingManager<FbwUserSettingsDefs>,
-  ) {
+  constructor(private readonly bus: EventBus) {
     this.initialize();
   }
 
   private initialize() {
     // Subscribe to the SimBridge Enabled setting to be notified when it changes. Otherwise, we would
     // only be able to check each check interval (5sec)
-    this.fbwSettingsManager.getSetting('fbwSimBridgeEnabled').sub((value) => {
-      // console.log(`[SimBridge-Client] SimBridge Enabled setting changed to: ${value}`);
-      this.simBridgeEnabledSetting = value;
+
+    this.simbridgeEnabledSetting.sub(() => {
       this.connectionAttemptCounter = 0;
       this.checkServerAvailability();
     });
 
     // Subscribe to the SimBridge Remote setting so we can instantly re-establish connection
     // when we change this
-    this.fbwSettingsManager.getSetting('fbwSimbridgeRemote').sub(() => {
+    NXDataStore.getSetting('CONFIG_SIMBRIDGE_REMOTE').sub(() => {
       this.connectionAttemptCounter = 0;
       this.checkServerAvailability();
     });
 
     // reset the setting if not permanent off
-    if (this.simBridgeEnabledSetting !== SimBridgeMode.PermOff) {
-      this.fbwSettingsManager.getSetting('fbwSimBridgeEnabled').set(SimBridgeMode.AutoOn);
+    if (this.simbridgeEnabledSetting.get() !== 'PERM OFF') {
+      this.simbridgeEnabledSetting.set('AUTO ON');
     }
 
     // Try to connect websocket if enabled in EFB and no connection established
@@ -69,7 +65,7 @@ export class SimBridgeStatePublisher {
   private checkServerAvailability() {
     // Check the SimBridge Enabled setting (set in the flyPad EFB)
     // If the setting is not AUTO ON, then the client is not available
-    if (this.simBridgeEnabledSetting !== SimBridgeMode.AutoOn) {
+    if (this.simbridgeEnabledSetting.get() !== 'AUTO ON') {
       this.connectionAttemptCounter = 0;
       this.available = false;
 
@@ -82,7 +78,7 @@ export class SimBridgeStatePublisher {
     // prevent the client from trying to connect to the server again. The user can reset the setting to AUTO ON
     // in the flyPad EFB to try again.
     if (this.connectionAttemptCounter++ >= this.maxSimBridgeConnectionAttempts) {
-      this.fbwSettingsManager.getSetting('fbwSimBridgeEnabled').set(SimBridgeMode.AutoOff);
+      NXDataStore.getSetting('CONFIG_SIMBRIDGE_ENABLED').set('AUTO OFF');
       this.connectionAttemptCounter = 0;
     } else {
       // try to connect to the server
@@ -136,11 +132,11 @@ export class SimBridgeStatePublisher {
       this.simBridgeState = SimBridgeClientState.CONNECTED;
       return;
     }
-    switch (this.simBridgeEnabledSetting) {
-      case SimBridgeMode.AutoOn:
+    switch (this.simbridgeEnabledSetting.get()) {
+      case 'AUTO ON':
         this.simBridgeState = SimBridgeClientState.CONNECTING;
         break;
-      case SimBridgeMode.AutoOff:
+      case 'AUTO OFF':
         this.simBridgeState = SimBridgeClientState.OFFLINE;
         break;
       default:

@@ -5,7 +5,7 @@
 import { NXDataStore } from '@flybywiresim/fbw-sdk';
 
 export const getSimBridgeIp = (): string =>
-  NXDataStore.getLegacy('CONFIG_SIMBRIDGE_REMOTE', 'local') === 'local'
+  NXDataStore.getSetting('CONFIG_SIMBRIDGE_REMOTE').get() === 'local'
     ? 'localhost'
     : NXDataStore.getLegacy('CONFIG_SIMBRIDGE_IP', 'localhost');
 

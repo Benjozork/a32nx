@@ -6,18 +6,17 @@ import {
   MappedSubject,
   Subject,
   Subscribable,
-  UserSettingManager,
   VNode,
 } from '@microsoft/msfs-sdk';
+
 import { LocalizedString } from '../Shared/translation';
 import { PageEnum } from '../Shared/common';
 import { Switch } from '../Pages/Pages';
 import { EFBSimvars } from '../EFBSimvarPublisher';
-import { FbwUserSettingsDefs, FlypadTimeDisplay, FlypadTimeFormat } from '../FbwUserSettings';
 import { AbstractUIView, UIVIew } from '../Shared';
 import { ClientState, SimBridgeClientState } from '@shared/simbridge';
-import { QuickControls } from './QuickControls';
 import { SettingsPages } from '../EfbV4FsInstrumentAircraftSpecificData';
+import { NXDataStore } from '@shared/persistence';
 
 interface BatteryStatusIconProps extends ComponentProps {
   batteryLevel: Subscribable<number>;
@@ -101,8 +100,6 @@ export class Battery extends DisplayComponent<BatteryProps> {
   }
 }
 interface StatusbarProps extends ComponentProps {
-  settings: UserSettingManager<FbwUserSettingsDefs>;
-
   settingsPages: SettingsPages;
 
   batteryLevel: Subscribable<number>;
@@ -127,9 +124,9 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
 
   private readonly monthName: LocalizedString = LocalizedString.create('StatusBar.Jan');
 
-  private readonly timezones = this.props.settings.getSetting('fbwEfbTimeDisplay');
+  private readonly timezones = NXDataStore.getSetting('EFB_TIME_DISPLAYED');
 
-  private readonly timeFormat = this.props.settings.getSetting('fbwEfbTimeFormat');
+  private readonly timeFormat = NXDataStore.getSetting('EFB_TIME_FORMAT');
 
   private readonly timeDisplayed = MappedSubject.create(
     ([currentUTC, currentLocalTime, timezones, timeFormat]) => {
@@ -140,7 +137,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
           .toString()
           .padStart(2, '0')}Z`;
       const getLocalFormattedTime = (seconds: number) => {
-        if (timeFormat === FlypadTimeFormat.TwentyFour) {
+        if (timeFormat === '24') {
           return `${Math.floor(seconds / 3600)
             .toString()
             .padStart(2, '0')}:${Math.floor((seconds % 3600) / 60)
@@ -156,10 +153,10 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
       const currentUTCString = getZuluFormattedTime(currentUTC);
       const currentLocalTimeString = getLocalFormattedTime(currentLocalTime);
 
-      if (timezones === FlypadTimeDisplay.Utc) {
+      if (timezones === 'utc') {
         return currentUTCString;
       }
-      if (timezones === FlypadTimeDisplay.Local) {
+      if (timezones === 'local') {
         return currentLocalTimeString;
       }
       return `${currentUTCString} / ${currentLocalTimeString}`;
@@ -227,7 +224,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
 
     this.simbridgeConnectionCheckTimeout = setInterval(() => {
       this.simBridgeConnected.set(
-        ClientState.getInstance(this.bus).getSimBridgeClientState() === SimBridgeClientState.CONNECTED,
+        ClientState.getInstance().getSimBridgeClientState() === SimBridgeClientState.CONNECTED,
       );
     });
   }
@@ -252,7 +249,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
         </div>
 
         <div class="flex items-center space-x-4">
-          <QuickControls settings={this.props.settings} settingsPages={this.props.settingsPages} />
+          {/*<QuickControls settings={this.props.settings} settingsPages={this.props.settingsPages} />*/}
           <i class={this.wifiClass} />
           <Battery batteryLevel={this.props.batteryLevel} isCharging={this.props.isCharging} />
         </div>

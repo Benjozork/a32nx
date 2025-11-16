@@ -27,6 +27,7 @@ import {
   SimBridgeClientState,
   usePersistentBooleanProperty,
   useGlobalVar,
+  usePersistentSetting,
 } from '@flybywiresim/fbw-sdk';
 import Slider from 'rc-slider';
 import { useHistory } from 'react-router-dom';
@@ -199,7 +200,7 @@ export const QuickControlsPane = ({
     Number.MAX_SAFE_INTEGER,
   );
   const [boardingRate, setBoardingRate] = usePersistentProperty('CONFIG_BOARDING_RATE', 'REAL');
-  const [, setSimbridgeEnabled] = usePersistentProperty('CONFIG_SIMBRIDGE_ENABLED', 'AUTO ON');
+  const [, setSimbridgeEnabled] = usePersistentSetting('CONFIG_SIMBRIDGE_ENABLED');
 
   const [simBridgeClientState, setSimBridgeClientState] = useState<SimBridgeClientState>(
     ClientState.getInstance().getSimBridgeClientState(),

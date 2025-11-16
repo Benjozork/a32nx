@@ -137,15 +137,11 @@ let currentLanguageMap = defaultLanguage;
 
 // Listener to change the currently set language in the flyPad.
 const watchLanguageChanges = () => {
-  NXDataStore.getAndSubscribeLegacy(
-    'EFB_LANGUAGE',
-    (_, value) => {
-      currentEfbLanguage = value;
-      currentLanguageMap = allLanguagesMap.get(currentEfbLanguage) || defaultLanguage;
-      console.log(`language changed to ${value}`);
-    },
-    'en',
-  );
+  NXDataStore.getSetting('EFB_LANGUAGE').sub((value) => {
+    currentEfbLanguage = value;
+    currentLanguageMap = allLanguagesMap.get(currentEfbLanguage) || defaultLanguage;
+    console.log(`language changed to ${value}`);
+  });
 };
 
 if (process.env.VITE_BUILD) {

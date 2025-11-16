@@ -1,9 +1,11 @@
-import { UserSetting, VNode } from '@microsoft/msfs-sdk';
-import { PerformanceCalculators } from '@shared/performance';
+import { LandingPerformanceCalculator, TakeoffPerformanceCalculator } from '@shared/performance';
+
+interface PerformanceCalculators {
+  takeoff: TakeoffPerformanceCalculator | null;
+  landing: LandingPerformanceCalculator | null;
+}
 
 export interface EfbV4FsInstrumentAircraftSpecificData {
-  renderAutomaticCalloutsPage: (returnHome: () => any, autoCallOuts: UserSetting<number>) => VNode;
-
   defaultAutoCalloutsSettingValue: number;
 
   performanceCalculators: PerformanceCalculators;

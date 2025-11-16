@@ -10,6 +10,7 @@ import {
   usePersistentProperty,
   ClientState,
   useGlobalVar,
+  usePersistentSetting,
 } from '@flybywiresim/fbw-sdk';
 import { useInterval } from '@flybywiresim/react-components';
 import { t, TooltipWrapper, initialState } from '@flybywiresim/flypad';
@@ -30,8 +31,8 @@ export const StatusBar = ({ batteryLevel, isCharging }: StatusBarProps) => {
   const [dayOfMonth] = useSimVar('E:ZULU DAY OF MONTH', 'number');
   const [showStatusBarFlightProgress] = usePersistentNumberProperty('EFB_SHOW_STATUSBAR_FLIGHTPROGRESS', 1);
 
-  const [timeDisplayed] = usePersistentProperty('EFB_TIME_DISPLAYED', 'utc');
-  const [timeFormat] = usePersistentProperty('EFB_TIME_FORMAT', '24');
+  const [timeDisplayed] = usePersistentSetting('EFB_TIME_DISPLAYED');
+  const [timeFormat] = usePersistentSetting('EFB_TIME_FORMAT');
 
   const [outdatedVersionFlag] = useSimVar('L:A32NX_OUTDATED_VERSION', 'boolean', 500);
 

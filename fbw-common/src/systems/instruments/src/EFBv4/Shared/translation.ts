@@ -4,7 +4,6 @@
 /* eslint-disable no-console */
 
 import { MappedSubject, MappedSubscribable, MutableSubscribable, Subject, Subscription } from '@microsoft/msfs-sdk';
-import { FbwUserSettings } from '../FbwUserSettings';
 import { NXDataStore } from '@flybywiresim/fbw-sdk';
 
 // source language
@@ -138,15 +137,11 @@ let currentLanguageMap = defaultLanguage;
 
 // Listener to change the currently set language in the flyPad.
 const watchLanguageChanges = () => {
-  NXDataStore.getAndSubscribe(
-    'EFB_LANGUAGE',
-    (_, value) => {
-      currentEfbLanguage = value;
-      currentLanguageMap = allLanguagesMap.get(currentEfbLanguage) || defaultLanguage;
-      console.log(`language changed to ${value}`);
-    },
-    'en',
-  );
+  NXDataStore.getSetting('EFB_LANGUAGE').sub((value) => {
+    currentEfbLanguage = value;
+    currentLanguageMap = allLanguagesMap.get(currentEfbLanguage) || defaultLanguage;
+    console.log(`language changed to ${value}`);
+  });
 };
 
 if (process.env.VITE_BUILD) {
@@ -225,9 +220,7 @@ export class LocalizedString implements MutableSubscribable<string>, Subscriptio
   private readonly updateCallback: MappedSubject<any, any>;
 
   private constructor(private readonly locKeyProp: string) {
-    this.languageSettingSubscription = FbwUserSettings.getExistingManager()
-      .getSetting('fbwEfbLanguage')
-      .pipe(this.efbLanguage);
+    this.languageSettingSubscription = NXDataStore.getSetting('EFB_LANGUAGE').pipe(this.efbLanguage);
 
     this.updateCallback = MappedSubject.create(
       ([efbLanguage, locKey]) => {
@@ -243,9 +236,7 @@ export class LocalizedString implements MutableSubscribable<string>, Subscriptio
   }
 
   public static translate(locKey: string, replacements?: Record<string, string>): string | null {
-    const msg = allLanguagesMap
-      .get(FbwUserSettings.getExistingManager().getSetting('fbwEfbLanguage').get())!
-      .get(locKey);
+    const msg = allLanguagesMap.get(NXDataStore.getSetting('EFB_LANGUAGE').get())!.get(locKey);
 
     if (msg === undefined) {
       return null;

@@ -3,119 +3,17 @@ import {
   DisplayComponent,
   FSComponent,
   MappedSubject,
-  Subject,
   Subscribable,
   SubscribableUtils,
-  UserSetting,
-  UserSettingManager,
   VNode,
 } from '@microsoft/msfs-sdk';
+
 import { PageEnum } from '../Shared/common';
-import { Dashboard } from './Dashboard/Dashboard';
-import { Dispatch } from './Dispatch/Dispatch';
-import { Ground } from './Ground/Ground';
-import { Performance } from './Performance/Performance';
-import { Navigation } from './Navigation/Navigation';
-import { Atc } from './ATC/Atc';
-import { Failures } from './Failures/Failures';
-import { Checklists } from './Checklists/Checklists';
-import { Presets } from './Presets/Presets';
-import { Settings } from './Settings/Settings';
 import { AbstractUIView, UIVIew, UIVIewUtils } from '../Shared/UIView';
 import { twMerge } from 'tailwind-merge';
-import { FlypadClient } from '@shared/flypad-server/FlypadClient';
-import { FbwUserSettingsDefs } from '../FbwUserSettings';
-import { GroundState } from '../State/GroundState';
-import { NavigationState, NavigraphAuthState, SimbriefState } from '../State/NavigationState';
-import { EFB_EVENT_BUS } from '../EfbV4FsInstrument';
-import { PerformanceCalculators } from '@shared/performance';
-import { SettingsPages } from '../EfbV4FsInstrumentAircraftSpecificData';
-import { SimBridgeState } from '../State/SimBridgeState';
 
 // Page should be an enum
 export type Pages = readonly [page: number, component: VNode][];
-
-interface MainPageProps extends ComponentProps {
-  activePage: Subject<number>;
-  settings: UserSettingManager<FbwUserSettingsDefs>;
-  flypadClient: FlypadClient;
-  settingsPages: SettingsPages;
-  renderAutomaticCalloutsPage: (returnHome: () => any, autoCallOuts: UserSetting<number>) => VNode;
-  performanceCalculators: PerformanceCalculators;
-}
-
-export class MainPage extends DisplayComponent<MainPageProps> {
-  private readonly navigationState = new NavigationState();
-
-  private readonly simbriefState = new SimbriefState(this.props.flypadClient);
-
-  private readonly groundState = new GroundState(EFB_EVENT_BUS);
-
-  private readonly navigraphAuthState = new NavigraphAuthState();
-
-  private readonly simBridgeState = new SimBridgeState(EFB_EVENT_BUS);
-
-  private readonly pages: Pages = [
-    [
-      PageEnum.MainPage.Dashboard,
-      <Dashboard
-        simbriefState={this.simbriefState}
-        navigraphAuthState={this.navigraphAuthState}
-        navigationState={this.navigationState}
-        settings={this.props.settings}
-      />,
-    ],
-    [PageEnum.MainPage.Dispatch, <Dispatch settings={this.props.settings} simbriefState={this.simbriefState} />],
-    [PageEnum.MainPage.Ground, <Ground groundState={this.groundState} simbriefState={this.simbriefState} />],
-    [
-      PageEnum.MainPage.Performance,
-      <Performance
-        settings={this.props.settings}
-        simbriefState={this.simbriefState}
-        calculators={this.props.performanceCalculators}
-      />,
-    ],
-    [
-      PageEnum.MainPage.Navigation,
-      <Navigation
-        simbriefState={this.simbriefState}
-        navigationState={this.navigationState}
-        navigraphState={this.navigraphAuthState}
-        simBridgeState={this.simBridgeState}
-      />,
-    ],
-    [PageEnum.MainPage.ATC, <Atc settings={this.props.settings} />],
-    [PageEnum.MainPage.Failures, <Failures />],
-    [PageEnum.MainPage.Checklists, <Checklists />],
-    [PageEnum.MainPage.Presets, <Presets bus={EFB_EVENT_BUS} />],
-    [
-      PageEnum.MainPage.Settings,
-      <Settings
-        settings={this.props.settings}
-        settingsPages={this.props.settingsPages}
-        navigraphAuthState={this.navigraphAuthState}
-        renderAutomaticCalloutsPage={this.props.renderAutomaticCalloutsPage}
-      />,
-    ],
-  ];
-
-  onAfterRender(node: VNode) {
-    super.onAfterRender(node);
-
-    // Manage brightness. TODO Should not be here, tbh
-    this.props.settings.getSetting('fbwEfbBrightness').sub((val) => {
-      SimVar.SetSimVarValue('L:A32NX_EFB_BRIGHTNESS', 'number', val);
-    });
-  }
-
-  render(): VNode {
-    return (
-      <div class="h-full grow pr-6 pt-4">
-        <Switch pages={this.pages} activePage={this.props.activePage} />
-      </div>
-    );
-  }
-}
 
 interface SwitchProps extends ComponentProps {
   activePage: Subscribable<number>;

@@ -187,7 +187,7 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
   const [, setBrightness] = useSimVar('L:A32NX_EFB_BRIGHTNESS', 'number');
   const [brightnessSetting] = usePersistentNumberProperty('EFB_BRIGHTNESS', 0);
   const [usingAutobrightness] = useSimVar('L:A32NX_EFB_USING_AUTOBRIGHTNESS', 'bool', 300);
-  const [batteryLifeEnabled] = usePersistentNumberProperty('EFB_BATTERY_LIFE_ENABLED', 1);
+  const [batteryLifeEnabled] = usePersistentSetting('EFB_BATTERY_LIFE_ENABLED');
 
   const dispatch = useAppDispatch();
 

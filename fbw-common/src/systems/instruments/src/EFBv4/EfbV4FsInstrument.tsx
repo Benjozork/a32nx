@@ -5,7 +5,6 @@ import { busContext, initializeEventBusContext } from './Contexts';
 import { EFBSimvarPublisher } from './EFBSimvarPublisher';
 import { EfbV4FsInstrumentAircraftSpecificData } from './EfbV4FsInstrumentAircraftSpecificData';
 import { SimBridgeStatePublisher } from '@shared/simbridge/components/SimBridgeStatePublisher';
-import { FbwUserSettings } from './FbwUserSettings';
 
 export const EFB_EVENT_BUS = new EventBus();
 
@@ -16,10 +15,7 @@ export class EfbV4FsInstrument implements FsInstrument {
 
   private readonly hEventPublisher = new HEventPublisher(this.bus);
 
-  private readonly SimBridgeStatePublisher = new SimBridgeStatePublisher(
-    this.bus,
-    FbwUserSettings.getManager(EFB_EVENT_BUS, this.aircraftSpecificData.defaultAutoCalloutsSettingValue),
-  );
+  private readonly SimBridgeStatePublisher = new SimBridgeStatePublisher(this.bus);
 
   constructor(
     public readonly instrument: BaseInstrument,

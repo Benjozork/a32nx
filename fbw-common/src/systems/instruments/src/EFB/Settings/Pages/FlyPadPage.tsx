@@ -26,16 +26,16 @@ export const FlyPadPage = () => {
   const [usingAutobrightness, setUsingAutobrightness] = usePersistentNumberProperty('EFB_USING_AUTOBRIGHTNESS', 1);
   const [theme, setTheme] = usePersistentSetting('EFB_UI_THEME');
   const [autoOSK, setAutoOSK] = usePersistentNumberProperty('EFB_AUTO_OSK', 0);
-  const [timeDisplayed, setTimeDisplayed] = usePersistentProperty('EFB_TIME_DISPLAYED', 'utc');
-  const [timeFormat, setTimeFormat] = usePersistentProperty('EFB_TIME_FORMAT', '24');
+  const [timeDisplayed, setTimeDisplayed] = usePersistentSetting('EFB_TIME_DISPLAYED');
+  const [timeFormat, setTimeFormat] = usePersistentSetting('EFB_TIME_FORMAT');
   const [showStatusBarFlightProgress, setShowStatusBarFlightProgress] = usePersistentNumberProperty(
     'EFB_SHOW_STATUSBAR_FLIGHTPROGRESS',
     1,
   );
   const [usingColoredMetar, setUsingColoredMetar] = usePersistentNumberProperty('EFB_USING_COLOREDMETAR', 1);
-  const [language, setLanguage] = usePersistentProperty('EFB_LANGUAGE', 'en');
+  const [language, setLanguage] = usePersistentSetting('EFB_LANGUAGE');
   const [keyboardLayout, setKeyboardLayout] = usePersistentProperty('EFB_KEYBOARD_LAYOUT_IDENT', 'english');
-  const [batteryLifeEnabled, setBatteryLifeEnabled] = usePersistentNumberProperty('EFB_BATTERY_LIFE_ENABLED', 1);
+  const [batteryLifeEnabled, setBatteryLifeEnabled] = usePersistentSetting('EFB_BATTERY_LIFE_ENABLED');
 
   // the tt() is a special case to update the page with the correct language after user
   // changes the language. the change to simvar hooks changed timing/order of updates.
@@ -44,18 +44,18 @@ export const FlyPadPage = () => {
     { name: tt('Settings.flyPad.Blue', language), setting: 'blue' },
     { name: tt('Settings.flyPad.Dark', language), setting: 'dark' },
     { name: tt('Settings.flyPad.Light', language), setting: 'light' },
-  ] as const;
+  ] as const satisfies ButtonType[];
 
-  const timeDisplayButtons: ButtonType[] = [
+  const timeDisplayButtons = [
     { name: tt('Settings.flyPad.Utc', language), setting: 'utc' },
     { name: tt('Settings.flyPad.Local', language), setting: 'local' },
     { name: tt('Settings.flyPad.UtcAndLocal', language), setting: 'both' },
-  ];
+  ] as const satisfies ButtonType[];
 
-  const timeFormatButtons: ButtonType[] = [
+  const timeFormatButtons = [
     { name: tt('Settings.flyPad.TwelveHours', language), setting: '12' },
     { name: tt('Settings.flyPad.TwentyFourHours', language), setting: '24' },
-  ];
+  ] as const satisfies ButtonType[];
 
   const handleThemeSelect = (theme: 'blue' | 'dark' | 'light') => {
     setTheme(theme);
@@ -141,7 +141,7 @@ export const FlyPadPage = () => {
       </SettingGroup>
 
       <SettingItem name={tt('Settings.flyPad.BatteryLifeEnabled', language)}>
-        <Toggle value={!!batteryLifeEnabled} onToggle={(value) => setBatteryLifeEnabled(value ? 1 : 0)} />
+        <Toggle value={batteryLifeEnabled} onToggle={(value) => setBatteryLifeEnabled(value)} />
       </SettingItem>
 
       <SettingItem name={tt('Settings.flyPad.ShowStatusBarFlightProgressIndicator', language)}>
@@ -170,11 +170,7 @@ export const FlyPadPage = () => {
           </SelectGroup>
         </SettingItem>
         {timeDisplayed !== 'utc' && (
-          <SettingItem
-            name={tt('Settings.flyPad.LocalTimeFormat', language)}
-            groupType="sub"
-            disabled={timeDisplayed === 'utc'}
-          >
+          <SettingItem name={tt('Settings.flyPad.LocalTimeFormat', language)} groupType="sub">
             <SelectGroup>
               {timeFormatButtons.map((button) => (
                 <SelectItem
