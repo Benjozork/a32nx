@@ -33,6 +33,13 @@ import { FbwLogo } from './Assets/FbwLogo';
 import { NotificationContainer } from './Components/Notification';
 import { EfbV4FsInstrumentAircraftSpecificData } from './EfbV4FsInstrumentAircraftSpecificData';
 import { NXDataStore } from '@shared/persistence';
+import { EfbV3ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
+
+declare global {
+  interface Window {
+    EFB_V3_BRIDGE: EfbV3ControlInterface | undefined;
+  }
+}
 
 interface EfbProps extends ComponentProps {
   aircraftSpecificData: EfbV4FsInstrumentAircraftSpecificData;
@@ -68,11 +75,28 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
       NXDataStore.getSetting('EFB_BATTERY_LIFE_ENABLED'),
     );
 
+    // FIXME v3 bridge, remove after no longer needed
+    this.currentPage.sub((page) => {
+      const bridge = window.EFB_V3_BRIDGE;
+
+      if (bridge === undefined) {
+        return;
+      }
+
+      bridge.setActivePage(page);
+    });
+
     const getComponentFromPowerState = (powerState: PowerStates): VNode => {
       switch (powerState) {
         case PowerStates.SHUTOFF:
         case PowerStates.STANDBY:
-          return <Button unstyled class="h-screen w-screen bg-black" onClick={() => powerManager.offToLoaded()} />;
+          return (
+            <Button
+              unstyled
+              class="pointer-events-auto h-screen w-screen bg-black"
+              onClick={() => powerManager.offToLoaded()}
+            />
+          );
         case PowerStates.LOADING:
         case PowerStates.SHUTDOWN:
           return (
@@ -96,7 +120,7 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
               />
               <div class="flex grow items-stretch">
                 <Navbar activePage={this.currentPage} />
-                <div class="h-full grow bg-transparent pr-6 pt-4" />
+                <div class="grow bg-transparent" />
               </div>
               <TooltipContainer />
               <NotificationContainer />
@@ -131,8 +155,8 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
 
   render(): VNode {
     return (
-      <div class="h-screen w-screen bg-theme-body">
-        <div ref={this.renderRoot} class="size-full flex flex-row" />
+      <div class="h-screen w-screen">
+        <div ref={this.renderRoot} class="flex h-full w-full flex-row" />
       </div>
     );
   }

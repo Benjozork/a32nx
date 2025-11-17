@@ -6,7 +6,7 @@ import {
   Subject,
   VNode,
 } from '@microsoft/msfs-sdk';
-// @ts-ignore
+
 import FbwTail from '../Assets/FBW-Tail.svg';
 import { PageEnum } from '../Shared/common';
 import { Button } from './Button';
@@ -43,9 +43,9 @@ export class Navbar extends DisplayComponent<NavbarProps> {
     [PageEnum.MainPage.Presets, 'sliders', 'Presets.Title'],
   ];
 
-  render(): VNode {
+  public render(): VNode {
     return (
-      <div class="flex w-32 shrink-0 flex-col justify-between self-stretch py-6">
+      <div class="pointer-events-auto flex w-32 shrink-0 flex-col justify-between self-stretch bg-theme-body py-6">
         <div class="mAX-H-F flex flex-col items-center space-y-4">
           <NavIcon
             page={PageEnum.MainPage.Dashboard}

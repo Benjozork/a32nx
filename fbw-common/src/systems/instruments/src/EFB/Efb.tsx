@@ -59,11 +59,12 @@ import { FlyPadPage } from './Settings/Pages/FlyPadPage';
 import { NavigraphAuthProvider } from '../react/navigraph';
 import { EventBus } from '@microsoft/msfs-sdk';
 import { TroubleshootingContextProvider } from './TroubleshootingContext';
+import { EfbV3ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
+import { PageEnum } from '../EFBv4';
 
 // './Assets/Efb.scss' is imported by the aircraft EFB instrument the wraps this file
 import './Assets/Theme.css';
 import './Assets/Slider.scss';
-
 import 'react-toastify/dist/ReactToastify.css';
 import './toast.css';
 
@@ -179,6 +180,12 @@ export const usePower = () => React.useContext(PowerContext);
 
 interface EfbProps {
   aircraftChecklistsProp: ChecklistJsonDefinition[];
+}
+
+declare global {
+  interface Window {
+    EFB_V3_BRIDGE: EfbV3ControlInterface;
+  }
 }
 
 export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
@@ -406,6 +413,49 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
   // =========================================================================
 
   const { offsetY } = useAppSelector((state) => state.keyboard);
+
+  useEffect(() => {
+    if (window.EFB_V3_BRIDGE !== undefined) {
+      return;
+    }
+
+    window.EFB_V3_BRIDGE = {
+      setActivePage(page: PageEnum.MainPage) {
+        switch (page) {
+          case PageEnum.MainPage.Dashboard:
+            history.push('/dashboard');
+            break;
+          case PageEnum.MainPage.Dispatch:
+            history.push('/dispatch');
+            break;
+          case PageEnum.MainPage.Ground:
+            history.push('/ground');
+            break;
+          case PageEnum.MainPage.Performance:
+            history.push('/performance');
+            break;
+          case PageEnum.MainPage.Navigation:
+            history.push('/navigation');
+            break;
+          case PageEnum.MainPage.ATC:
+            history.push('/atc');
+            break;
+          case PageEnum.MainPage.Failures:
+            history.push('/failures');
+            break;
+          case PageEnum.MainPage.Checklists:
+            history.push('/checklists');
+            break;
+          case PageEnum.MainPage.Presets:
+            history.push('/presets');
+            break;
+          case PageEnum.MainPage.Settings:
+            history.push('/settings');
+            break;
+        }
+      },
+    };
+  });
 
   switch (powerState) {
     case PowerStates.SHUTOFF:
