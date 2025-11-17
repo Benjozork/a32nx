@@ -254,7 +254,7 @@ export class SimpleInput extends AbstractUIView<SimpleInputProps> {
   private readonly className = MappedSubject.create(
     ([disabled, prop_class]) => {
       return twMerge(
-        'size-full rounded-md border-2 border-theme-accent bg-theme-accent px-3 py-1.5 text-theme-text transition duration-100 placeholder:text-theme-unselected focus-within:border-theme-highlight focus-within:outline-none',
+        'w-full h-full rounded-md border-2 border-theme-accent bg-theme-accent px-3 py-1.5 text-theme-text transition duration-100 placeholder:text-theme-unselected focus-within:border-theme-highlight focus-within:outline-none',
         this.props.fontSizeClassName ?? 'text-lg',
         prop_class,
         disabled && 'opacity-50',

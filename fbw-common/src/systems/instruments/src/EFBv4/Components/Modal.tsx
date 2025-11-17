@@ -135,7 +135,7 @@ export class ModalContainer extends AbstractUIView {
             `fixed inset-0 z-50 transition duration-200 ${isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'}`,
         )}
       >
-        <div ref={this.backgroundRef} class="absolute inset-0 size-full bg-theme-body opacity-75" />
+        <div ref={this.backgroundRef} class="absolute inset-0 h-full w-full bg-theme-body opacity-75" />
         <div
           ref={this.modalParentRef}
           class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"

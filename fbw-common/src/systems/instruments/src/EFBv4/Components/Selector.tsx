@@ -18,7 +18,7 @@ export class Selector extends DisplayComponent<SelectorProps> {
       <div class={twMerge('flex h-12 justify-between', this.props.class ?? '')}>
         <div
           class={twMerge(
-            'flex size-full divide-x divide-theme-accent overflow-hidden rounded-md border border-theme-accent',
+            'flex w-full h-full divide-x divide-theme-accent overflow-hidden rounded-md border border-theme-accent',
             this.props.innerClass ?? '',
           )}
         >
