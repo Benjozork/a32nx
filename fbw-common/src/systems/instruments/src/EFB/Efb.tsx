@@ -485,6 +485,7 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
                 batteryLevel={batteryLevel.level}
                 isCharging={dc2BusIsPowered === 1}
                 showQuickControlsPane={showQuickControlsPane}
+                setShowQuickControlsPane={setShowQuickControlsPane}
               />
               <div className="flex flex-row">
                 <ToolBar />
