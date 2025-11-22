@@ -509,9 +509,11 @@ export const QuickControlsPane = ({
   );
 };
 
-export const QuickControls = () => {
-  const [showQuickControlsPane, setShowQuickControlsPane] = useState(false);
+export interface QuickControlsProps {
+  showQuickControlsPane: boolean;
+}
 
+export const QuickControls: FC<QuickControlsProps> = ({ showQuickControlsPane }) => {
   return (
     <>
       <TooltipWrapper text={t('StatusBar.TT.QuickControls')}>

@@ -209,6 +209,8 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
     isCharging: dc2BusIsPowered,
   });
 
+  const [showQuickControlsPane, setShowQuickControlsPane] = useState(false);
+
   const [ac1BusIsPowered] = useSimVar('L:A32NX_ELEC_AC_1_BUS_IS_POWERED', 'number', 1000);
   const [, setLoadLightingPresetVar] = useSimVar('L:A32NX_LIGHTING_PRESET_LOAD', 'number', 200);
   const [autoDisplayBrightness] = useSimVar('GLASSCOCKPIT AUTOMATIC BRIGHTNESS', 'percent', 1000);
@@ -454,6 +456,7 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
             break;
         }
       },
+      openQuickSettings: () => setShowQuickControlsPane(true),
     };
   });
 
@@ -478,7 +481,11 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
               <Tooltip posX={posX} posY={posY} shown={shown} text={text} />
 
               <ToastContainer position="top-center" draggableDirection="y" limit={2} />
-              <StatusBar batteryLevel={batteryLevel.level} isCharging={dc2BusIsPowered === 1} />
+              <StatusBar
+                batteryLevel={batteryLevel.level}
+                isCharging={dc2BusIsPowered === 1}
+                showQuickControlsPane={showQuickControlsPane}
+              />
               <div className="flex flex-row">
                 <ToolBar />
                 <div className="h-screen w-screen pr-6 pt-14">

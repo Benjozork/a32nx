@@ -17,6 +17,8 @@ import { AbstractUIView, UIVIew } from '../Shared';
 import { ClientState, SimBridgeClientState } from '@shared/simbridge';
 import { SettingsPages } from '../EfbV4FsInstrumentAircraftSpecificData';
 import { NXDataStore } from '@shared/persistence';
+import { TooltipWrapper } from './Tooltip';
+import { Button } from './Button';
 
 interface BatteryStatusIconProps extends ComponentProps {
   batteryLevel: Subscribable<number>;
@@ -173,7 +175,17 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
     (isConnected) => `bi-${isConnected ? 'wifi' : 'wifi-off'} text-inherit text-[26px]`,
   );
 
-  onAfterRender(node: VNode) {
+  private handleToggleQuickSettings = () => {
+    const bridge = window.EFB_V3_BRIDGE;
+
+    if (bridge === undefined) {
+      return;
+    }
+
+    bridge.openQuickSettings();
+  };
+
+  public onAfterRender(node: VNode) {
     super.onAfterRender(node);
 
     const sub = this.bus.getSubscriber<EFBSimvars>();
@@ -229,7 +241,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
     });
   }
 
-  destroy(childFilter?: (child: UIVIew) => boolean) {
+  public destroy(childFilter?: (child: UIVIew) => boolean) {
     super.destroy(childFilter);
 
     if (this.simbridgeConnectionCheckTimeout) {
@@ -249,7 +261,11 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
         </div>
 
         <div class="flex items-center space-x-4">
-          {/*<QuickControls settings={this.props.settings} settingsPages={this.props.settingsPages} />*/}
+          <TooltipWrapper text={'StatusBar.TT.QuickControls'}>
+            <Button unstyled class="bg-none" onClick={this.handleToggleQuickSettings}>
+              <i class="bi-gear text-[36px] text-inherit" />
+            </Button>
+          </TooltipWrapper>
           <i class={this.wifiClass} />
           <Battery batteryLevel={this.props.batteryLevel} isCharging={this.props.isCharging} />
         </div>

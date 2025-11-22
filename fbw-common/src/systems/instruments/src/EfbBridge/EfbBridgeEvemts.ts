@@ -15,4 +15,6 @@ export enum EfbPage {
 
 export interface EfbV3ControlInterface {
   setActivePage(page: PageEnum.MainPage): void;
+
+  openQuickSettings(): void;
 }

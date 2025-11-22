@@ -21,9 +21,10 @@ import { QuickControls } from './QuickControls';
 interface StatusBarProps {
   batteryLevel: number;
   isCharging: boolean;
+  showQuickControlsPane: boolean;
 }
 
-export const StatusBar = ({ batteryLevel, isCharging }: StatusBarProps) => {
+export const StatusBar = ({ batteryLevel, isCharging, showQuickControlsPane }: StatusBarProps) => {
   const [currentUTC] = useSimVar('E:ZULU TIME', 'seconds');
   const [currentLocalTime] = useSimVar('E:LOCAL TIME', 'seconds');
   const [dayOfWeek] = useSimVar('E:ZULU DAY OF WEEK', 'number');
@@ -182,7 +183,7 @@ export const StatusBar = ({ batteryLevel, isCharging }: StatusBarProps) => {
           </TooltipWrapper>
         )}
 
-        <QuickControls />
+        <QuickControls showQuickControlsPane={showQuickControlsPane} />
 
         <TooltipWrapper
           text={simBridgeConnected ? t('StatusBar.TT.ConnectedToLocalApi') : t('StatusBar.TT.DisconnectedFromLocalApi')}
