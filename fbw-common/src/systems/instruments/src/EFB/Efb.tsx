@@ -22,7 +22,6 @@ import {
 import { Provider } from 'react-redux';
 import { customAlphabet } from 'nanoid';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import { Battery } from 'react-bootstrap-icons';
 import { ToastContainer } from 'react-toastify';
 import { distanceTo } from 'msfs-geo';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -37,10 +36,8 @@ import {
 } from '@flybywiresim/flypad';
 import { Error as ErrorIcon } from './Assets/Error';
 import { FailuresOrchestratorProvider } from './failures-orchestrator-provider';
-import { AlertModal, ModalContainer, ModalProvider, useModals } from './UtilComponents/Modals/Modals';
-import { FbwLogo } from './UtilComponents/FbwLogo';
+import { ModalContainer, ModalProvider } from './UtilComponents/Modals/Modals';
 import { Tooltip } from './UtilComponents/TooltipWrapper';
-import { StatusBar } from './StatusBar/StatusBar';
 import { ToolBar } from './ToolBar/ToolBar';
 import { Dashboard } from './Dashboard/Dashboard';
 import { Dispatch } from './Dispatch/Dispatch';
@@ -61,6 +58,7 @@ import { EventBus } from '@microsoft/msfs-sdk';
 import { TroubleshootingContextProvider } from './TroubleshootingContext';
 import { EfbV3ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
 import { PageEnum } from '../EFBv4';
+import { StatusBar } from './StatusBar/StatusBar';
 
 // './Assets/Efb.scss' is imported by the aircraft EFB instrument the wraps this file
 import './Assets/Theme.css';
@@ -139,21 +137,6 @@ export const EfbWrapper: React.FC<EfbWrapperProps> = ({ failures, aircraftSetup,
   );
 };
 
-const BATTERY_DURATION_CHARGE_MIN = 180;
-const BATTERY_DURATION_DISCHARGE_MIN = 540;
-
-const LoadingScreen = () => (
-  <div className="flex h-screen w-screen items-center justify-center bg-theme-statusbar">
-    <FbwLogo width={128} height={120} className="text-theme-text" />
-  </div>
-);
-
-const EmptyBatteryScreen = () => (
-  <div className="flex h-screen w-screen items-center justify-center bg-theme-statusbar">
-    <Battery size={128} className="text-utility-red" />
-  </div>
-);
-
 export enum PowerStates {
   SHUTOFF,
   SHUTDOWN,
@@ -170,12 +153,6 @@ interface PowerContextInterface {
 
 export const PowerContext = React.createContext<PowerContextInterface>(undefined as any);
 
-interface BatteryStatus {
-  level: number;
-  lastChangeTimestamp: number;
-  isCharging: boolean;
-}
-
 export const usePower = () => React.useContext(PowerContext);
 
 interface EfbProps {
@@ -190,24 +167,15 @@ declare global {
 
 export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
   const [powerState, setPowerState] = useState<PowerStates>(PowerStates.SHUTOFF);
-  const [absoluteTime] = useSimVar('E:ABSOLUTE TIME', 'seconds', 5000);
   const [, setBrightness] = useSimVar('L:A32NX_EFB_BRIGHTNESS', 'number');
   const [brightnessSetting] = usePersistentNumberProperty('EFB_BRIGHTNESS', 0);
   const [usingAutobrightness] = useSimVar('L:A32NX_EFB_USING_AUTOBRIGHTNESS', 'bool', 300);
-  const [batteryLifeEnabled] = usePersistentSetting('EFB_BATTERY_LIFE_ENABLED');
 
   const dispatch = useAppDispatch();
 
   // Set the aircraft checklists received via component props in the redux store, so they can be
   // accessed by other EFB components
   dispatch(setAircraftChecklists(aircraftChecklistsProp));
-
-  const [dc2BusIsPowered] = useSimVar('L:A32NX_ELEC_DC_2_BUS_IS_POWERED', 'bool');
-  const [batteryLevel, setBatteryLevel] = useState<BatteryStatus>({
-    level: 100,
-    lastChangeTimestamp: absoluteTime,
-    isCharging: dc2BusIsPowered,
-  });
 
   const [showQuickControlsPane, setShowQuickControlsPane] = useState(false);
 
@@ -229,8 +197,6 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
 
   const [theme] = usePersistentSetting('EFB_UI_THEME');
 
-  const { showModal } = useModals();
-
   const history = useHistory();
 
   useEffect(() => {
@@ -250,53 +216,6 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
 
     dispatch(setFlightPlanProgress(flightPlanProgress));
   }, [lat.toFixed(2), long.toFixed(2), arrivingPosLat, arrivingPosLong, departingPosLat, departingPosLong]);
-
-  useEffect(() => {
-    if (powerState !== PowerStates.LOADED || !batteryLifeEnabled) return;
-
-    setBatteryLevel((oldLevel) => {
-      const deltaTs = Math.max(absoluteTime - oldLevel.lastChangeTimestamp, 0);
-      const batteryDurationSec = oldLevel.isCharging
-        ? BATTERY_DURATION_CHARGE_MIN * 60
-        : -BATTERY_DURATION_DISCHARGE_MIN * 60;
-
-      let level = oldLevel.level + (100 * deltaTs) / batteryDurationSec;
-      if (level > 100) level = 100;
-      if (level < 0) level = 0;
-      const lastChangeTimestamp = absoluteTime;
-      const isCharging = oldLevel.isCharging;
-
-      if (oldLevel.level > 20 && level <= 20) {
-        showModal(
-          <AlertModal
-            title="Battery Low"
-            bodyText="The battery is getting very low. Please charge the battery soon."
-          />,
-        );
-      }
-
-      return { level, lastChangeTimestamp, isCharging };
-    });
-  }, [absoluteTime, powerState]);
-
-  useEffect(() => {
-    setBatteryLevel((oldLevel) => {
-      if (oldLevel.isCharging !== dc2BusIsPowered) {
-        return { level: oldLevel.level, lastChangeTimestamp: absoluteTime, isCharging: dc2BusIsPowered };
-      }
-      return oldLevel;
-    });
-  }, [absoluteTime, dc2BusIsPowered]);
-
-  useEffect(() => {
-    if (batteryLevel.level <= 0) {
-      setPowerState(PowerStates.EMPTY);
-    }
-
-    if (batteryLevel.level > 2 && powerState === PowerStates.EMPTY) {
-      offToLoaded();
-    }
-  }, [batteryLevel, powerState]);
 
   // Automatically load a lighting preset
   useEffect(() => {
@@ -458,63 +377,47 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
       },
       openQuickSettings: () => setShowQuickControlsPane(true),
     };
+
+    return () => (window.EFB_V3_BRIDGE = undefined);
   });
 
-  switch (powerState) {
-    case PowerStates.SHUTOFF:
-    case PowerStates.STANDBY:
-      return <div className="h-screen w-screen" onClick={offToLoaded} />;
-    case PowerStates.LOADING:
-    case PowerStates.SHUTDOWN:
-      return <LoadingScreen />;
-    case PowerStates.EMPTY:
-      if (dc2BusIsPowered === 1) {
-        return offToLoaded();
-      }
-      return <EmptyBatteryScreen />;
-    case PowerStates.LOADED:
-      return (
-        <NavigraphAuthProvider>
-          <ModalContainer />
-          <PowerContext.Provider value={{ powerState, setPowerState }}>
-            <div className="bg-theme-body" style={{ transform: `translateY(-${offsetY}px)` }}>
-              <Tooltip posX={posX} posY={posY} shown={shown} text={text} />
+  return (
+    <NavigraphAuthProvider>
+      <ModalContainer />
+      <PowerContext.Provider value={{ powerState, setPowerState }}>
+        <div className="bg-theme-body" style={{ transform: `translateY(-${offsetY}px)` }}>
+          <Tooltip posX={posX} posY={posY} shown={shown} text={text} />
 
-              <ToastContainer position="top-center" draggableDirection="y" limit={2} />
-              <StatusBar
-                batteryLevel={batteryLevel.level}
-                isCharging={dc2BusIsPowered === 1}
-                showQuickControlsPane={showQuickControlsPane}
-                setShowQuickControlsPane={setShowQuickControlsPane}
-              />
-              <div className="flex flex-row">
-                <ToolBar />
-                <div className="h-screen w-screen pr-6 pt-14">
-                  <Switch>
-                    <Route exact path="/">
-                      <Redirect to="/dashboard" />
-                    </Route>
-                    <Route path="/dashboard" component={Dashboard} />
-                    <Route path="/dispatch" component={Dispatch} />
-                    <Route path="/ground" component={Ground} />
-                    <Route path="/performance" component={Performance} />
-                    <Route path="/navigation" component={Navigation} />
-                    <Route path="/atc" component={ATC} />
-                    <Route path="/failures" component={Failures} />
-                    <Route path="/checklists" component={Checklists} />
-                    <Route path="/presets" component={Presets} />
-                    <Route path="/settings" component={Settings} />
-                    <Route path="/settings/flypad" component={FlyPadPage} />
-                  </Switch>
-                </div>
-              </div>
+          <ToastContainer position="top-center" draggableDirection="y" limit={2} />
+          <StatusBar
+            showQuickControlsPane={showQuickControlsPane}
+            setShowQuickControlsPane={setShowQuickControlsPane}
+          />
+          <div className="flex flex-row">
+            <ToolBar />
+            <div className="h-screen w-screen pr-6 pt-14">
+              <Switch>
+                <Route exact path="/">
+                  <Redirect to="/dashboard" />
+                </Route>
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/dispatch" component={Dispatch} />
+                <Route path="/ground" component={Ground} />
+                <Route path="/performance" component={Performance} />
+                <Route path="/navigation" component={Navigation} />
+                <Route path="/atc" component={ATC} />
+                <Route path="/failures" component={Failures} />
+                <Route path="/checklists" component={Checklists} />
+                <Route path="/presets" component={Presets} />
+                <Route path="/settings" component={Settings} />
+                <Route path="/settings/flypad" component={FlyPadPage} />
+              </Switch>
             </div>
-          </PowerContext.Provider>
-        </NavigraphAuthProvider>
-      );
-    default:
-      throw new Error('Invalid content state provided');
-  }
+          </div>
+        </div>
+      </PowerContext.Provider>
+    </NavigraphAuthProvider>
+  );
 };
 
 interface ErrorFallbackProps {

@@ -1,5 +1,4 @@
-// @ts-strict-ignore
-// Copyright (c) 2023-2024 FlyByWire Simulations
+// Copyright (c) 2023-2025 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
 
 import React, { FC, forwardRef, useCallback, useContext, useMemo, useRef, useState } from 'react';
@@ -305,7 +304,7 @@ export const QuickControlsPane = ({
     }
   }, [simBridgeClientState]);
 
-  const pauseAtTodStyle = useMemo<string>((): string => {
+  const pauseAtTodStyle = useMemo(() => {
     if (pauseAtTod && todArmed) {
       return 'bg-utility-green';
     } else if (pauseAtTod) {
@@ -505,25 +504,6 @@ export const QuickControlsPane = ({
           </TooltipWrapper>
         </div>
       </div>
-    </>
-  );
-};
-
-export interface QuickControlsProps {
-  showQuickControlsPane: boolean;
-
-  setShowQuickControlsPane: (value: boolean | ((old: boolean) => boolean)) => void;
-}
-
-export const QuickControls: FC<QuickControlsProps> = ({ showQuickControlsPane, setShowQuickControlsPane }) => {
-  return (
-    <>
-      <TooltipWrapper text={t('StatusBar.TT.QuickControls')}>
-        <div onClick={() => setShowQuickControlsPane((old) => !old)}>
-          <Gear size={26} />
-        </div>
-      </TooltipWrapper>
-      {showQuickControlsPane && <QuickControlsPane setShowQuickControlsPane={setShowQuickControlsPane} />}
     </>
   );
 };

@@ -263,7 +263,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
         <div class="flex items-center space-x-4">
           <TooltipWrapper text={'StatusBar.TT.QuickControls'}>
             <Button unstyled class="bg-none" onClick={this.handleToggleQuickSettings}>
-              <i class="bi-gear text-[36px] text-inherit" />
+              <i class="bi-gear text-[26px] text-inherit" />
             </Button>
           </TooltipWrapper>
           <i class={this.wifiClass} />
