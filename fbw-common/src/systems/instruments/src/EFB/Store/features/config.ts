@@ -1,4 +1,3 @@
-// @ts-strict-ignore
 /* eslint-disable max-len */
 // Copyright (c) 2023-2024 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
@@ -8,15 +7,15 @@ import { AirframeInfo, CabinInfo, FlypadInfo } from '@flybywiresim/fbw-sdk';
 import { store, RootState } from '../store';
 
 interface AircraftState {
-  airframeInfo: AirframeInfo;
-  flypadInfo: FlypadInfo;
-  cabinInfo: CabinInfo;
+  airframeInfo: AirframeInfo | undefined;
+  flypadInfo: FlypadInfo | undefined;
+  cabinInfo: CabinInfo | undefined;
 }
 
 const initialState: AircraftState = {
-  airframeInfo: null,
-  flypadInfo: null,
-  cabinInfo: null,
+  airframeInfo: undefined,
+  flypadInfo: undefined,
+  cabinInfo: undefined,
 };
 
 export const configSlice = createSlice({
@@ -37,13 +36,13 @@ export const configSlice = createSlice({
 
 export const { setAirframeInfo, setFlypadInfo, setCabinInfo } = configSlice.actions;
 
-export const getMaxPax = (): number =>
-  (store.getState() as RootState).config.cabinInfo.seatMap.reduce(
+export const getMaxPax = (): number | undefined =>
+  (store.getState() as RootState).config.cabinInfo?.seatMap.reduce(
     (count, station) => count + station.rows.reduce((stationCount, row) => stationCount + row.seats.length, 0),
     0,
   );
 
-export const getMaxCargo = (): number =>
-  (store.getState() as RootState).config.cabinInfo.cargoMap.reduce((a, b) => a + b.weight, 0);
+export const getMaxCargo = (): number | undefined =>
+  (store.getState() as RootState).config.cabinInfo?.cargoMap.reduce((a, b) => a + b.weight, 0);
 
 export default configSlice.reducer;

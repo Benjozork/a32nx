@@ -10,13 +10,11 @@ import {
   NXDataStore,
   SENTRY_CONSENT_KEY,
   SentryConsentState,
-  useInteractionEvent,
   useInterval,
   usePersistentNumberProperty,
   usePersistentProperty,
   useSimVar,
   ChecklistProvider,
-  usePersistentSetting,
 } from '@flybywiresim/fbw-sdk';
 
 import { Provider } from 'react-redux';
@@ -38,7 +36,6 @@ import { Error as ErrorIcon } from './Assets/Error';
 import { FailuresOrchestratorProvider } from './failures-orchestrator-provider';
 import { ModalContainer, ModalProvider } from './UtilComponents/Modals/Modals';
 import { Tooltip } from './UtilComponents/TooltipWrapper';
-import { ToolBar } from './ToolBar/ToolBar';
 import { Dashboard } from './Dashboard/Dashboard';
 import { Dispatch } from './Dispatch/Dispatch';
 import { Ground } from './Ground/Ground';
@@ -166,7 +163,7 @@ declare global {
 }
 
 export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
-  const [powerState, setPowerState] = useState<PowerStates>(PowerStates.SHUTOFF);
+  const [powerState, setPowerState] = useSimVar('L:A32NX_EFB_POWER_STATE', 'number');
   const [, setBrightness] = useSimVar('L:A32NX_EFB_BRIGHTNESS', 'number');
   const [brightnessSetting] = usePersistentNumberProperty('EFB_BRIGHTNESS', 0);
   const [usingAutobrightness] = useSimVar('L:A32NX_EFB_USING_AUTOBRIGHTNESS', 'bool', 300);
@@ -195,13 +192,7 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
     (state) => state.simbrief.data,
   );
 
-  const [theme] = usePersistentSetting('EFB_UI_THEME');
-
   const history = useHistory();
-
-  useEffect(() => {
-    document.documentElement.classList.add(`theme-${theme}`, 'animationsEnabled');
-  }, []);
 
   useEffect(() => {
     const remainingDistance = distanceTo({ lat, long }, { lat: arrivingPosLat, long: arrivingPosLong });
@@ -274,36 +265,16 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
       }
     }
   }, [powerState]);
+
   // If the user has activated the autofill of checklists, setAutomaticItemStates will retrieve current aircraft states
   // where appropriate and set checklists items to "completed" automatically
   const [autoFillChecklists] = usePersistentNumberProperty('EFB_AUTOFILL_CHECKLISTS', 0);
+
   useInterval(() => {
     if (!autoFillChecklists) return;
     setAutomaticItemStates(aircraftChecklistsProp);
   }, 1000);
   // ===================================
-
-  const offToLoaded = () => {
-    const shouldWait = powerState === PowerStates.SHUTOFF || powerState === PowerStates.EMPTY;
-    setPowerState(PowerStates.LOADING);
-    if (shouldWait) {
-      setTimeout(() => {
-        setPowerState(PowerStates.LOADED);
-      }, 2500);
-    } else {
-      setPowerState(PowerStates.LOADED);
-    }
-    return <></>;
-  };
-
-  useInteractionEvent('A32NX_EFB_POWER', () => {
-    if (powerState === PowerStates.STANDBY) {
-      offToLoaded();
-    } else {
-      history.push('/');
-      setPowerState(PowerStates.STANDBY);
-    }
-  });
 
   const { posX, posY, shown, text } = useAppSelector((state) => state.tooltip);
 
@@ -394,7 +365,8 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
             setShowQuickControlsPane={setShowQuickControlsPane}
           />
           <div className="flex flex-row">
-            <ToolBar />
+            <nav className="w-32 shrink-0" />
+
             <div className="h-screen w-screen pr-6 pt-14">
               <Switch>
                 <Route exact path="/">
@@ -482,9 +454,17 @@ interface EfbInstrumentProps {
 export const EfbInstrument: React.FC<EfbInstrumentProps> = ({ failures, aircraftChecklists, eventBus }) => {
   const [, setSessionId] = usePersistentProperty('A32NX_SENTRY_SESSION_ID');
 
+  const airframeInfo = useAppSelector((state) => state.config.airframeInfo);
+  const flypadInfo = useAppSelector((state) => state.config.flypadInfo);
+  const cabinInfo = useAppSelector((state) => state.config.cabinInfo);
+
   useEffect(() => () => setSessionId(''), []);
 
   const [err, setErr] = useState(false);
+
+  if (airframeInfo === undefined || flypadInfo === undefined || cabinInfo === undefined) {
+    return null;
+  }
 
   return (
     <TroubleshootingContextProvider eventBus={eventBus}>
