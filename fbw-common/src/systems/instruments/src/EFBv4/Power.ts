@@ -1,7 +1,8 @@
-import { EventSubscriber, MappedSubject, MathUtils, Subject, Subscribable } from '@microsoft/msfs-sdk';
+import { EventBus, MappedSubject, MathUtils, SimVarValueType, Subject, Subscribable } from '@microsoft/msfs-sdk';
 
 import { ModalKind, showModal } from 'instruments/src/EFBv4/Components/Modal';
 import { EFBSimvars } from 'instruments/src/EFBv4/EFBSimvarPublisher';
+import { RegisteredSimVar } from '@shared/SimVarUtils';
 
 const BATTERY_DURATION_CHARGE_MIN = 180;
 const BATTERY_DURATION_DISCHARGE_MIN = 540;
@@ -55,41 +56,52 @@ export enum PowerStates {
 }
 
 export class PowerManager {
-  private battery: Battery;
+  private static readonly AbsoluteTimeSimVar = RegisteredSimVar.create<number>(
+    'E:ABSOLUTE TIME',
+    SimVarValueType.Seconds,
+  );
 
-  private isBatteryChargeDischargeBeingSimulated: Subscribable<boolean>;
+  private static readonly Dc2BusIsPoweredSimVar = RegisteredSimVar.createBoolean('L:A32NX_ELEC_DC_2_BUS_IS_POWERED');
 
-  private powerState: Subject<PowerStates>;
-  private isCharging: Subject<boolean>;
-  private charge: Subject<number>;
+  private static PowerStateSimVar = RegisteredSimVar.create<number>('L:A32NX_EFB_POWER_STATE', SimVarValueType.Number);
 
-  constructor(efbSimvarSubscriber: EventSubscriber<EFBSimvars>, batteryLifeEnabled: Subscribable<boolean>) {
-    this.isCharging = Subject.create(SimVar.GetSimVarValue('L:A32NX_ELEC_DC_2_BUS_IS_POWERED', 'bool'));
+  private readonly battery = new Battery(100, PowerManager.AbsoluteTimeSimVar.get());
 
-    this.battery = new Battery(100, SimVar.GetSimVarValue('E:ABSOLUTE TIME', 'seconds'));
-    this.powerState = Subject.create(PowerStates.SHUTOFF as PowerStates);
-    this.charge = Subject.create(100);
+  private readonly powerState = Subject.create(PowerStates.SHUTOFF as PowerStates);
 
+  private isBatteryChargeDischargeBeingSimulated = MappedSubject.create(
+    ([batteryLifeEnabled, powerState]) => {
+      return powerState === PowerStates.LOADED && batteryLifeEnabled;
+    },
+    this.batteryLifeEnabled,
+    this.powerState,
+  );
+
+  private readonly isCharging = Subject.create(PowerManager.Dc2BusIsPoweredSimVar.get());
+
+  private readonly charge = Subject.create(100);
+
+  constructor(
+    bus: EventBus,
+    private readonly batteryLifeEnabled: Subscribable<boolean>,
+  ) {
+    const efbSimvarSubscriber = bus.getSubscriber<EFBSimvars>();
+
+    // FIXME why do we use both published simvars and static accesses?
     efbSimvarSubscriber.on('dc2BusIsPowered').handle((isPowered) => {
       this.isCharging.set(isPowered);
-      this.battery.onChargeStopStart(SimVar.GetSimVarValue('E:ABSOLUTE TIME', 'seconds'));
+      this.battery.onChargeStopStart(PowerManager.AbsoluteTimeSimVar.get());
     });
-
-    this.isBatteryChargeDischargeBeingSimulated = MappedSubject.create(
-      ([batteryLifeEnabled, powerState]) => {
-        return powerState === PowerStates.LOADED && batteryLifeEnabled;
-      },
-      batteryLifeEnabled,
-      this.powerState,
-    );
 
     efbSimvarSubscriber.on('absoluteTime').handle((time) => {
       this.updateCharge(time);
     });
 
     this.isBatteryChargeDischargeBeingSimulated.sub(() =>
-      this.battery.onChargeStopStart(SimVar.GetSimVarValue('E:ABSOLUTE TIME', 'seconds')),
+      this.battery.onChargeStopStart(PowerManager.AbsoluteTimeSimVar.get()),
     );
+
+    this.powerState.sub((state) => PowerManager.PowerStateSimVar.set(state));
   }
 
   get power(): Subscribable<PowerStates> {

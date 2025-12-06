@@ -22,10 +22,8 @@ import './Assets/Theme.css';
 import './Assets/Slider.scss';
 import './Assets/bi-icons.css';
 
-import { EFB_EVENT_BUS } from './EfbV4FsInstrument';
 import { TooltipContainer } from './Components/Tooltip';
 import { ModalContainer } from './Components/Modal';
-import { EFBSimvars } from './EFBSimvarPublisher';
 import { PowerManager, PowerStates } from './Power';
 import { Button } from 'instruments/src/EFBv4/Components/Button';
 
@@ -70,10 +68,7 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
     document.documentElement.classList.add(`theme-${theme}`, 'animationsEnabled');
 
     // FIXME seems like the power manager needs to be initialized here in this method... bus is probably not ready to use yet
-    const powerManager = new PowerManager(
-      this.bus.getSubscriber<EFBSimvars>(),
-      NXDataStore.getSetting('EFB_BATTERY_LIFE_ENABLED'),
-    );
+    const powerManager = new PowerManager(this.bus, NXDataStore.getSetting('EFB_BATTERY_LIFE_ENABLED'));
 
     // FIXME v3 bridge, remove after no longer needed
     this.currentPage.sub((page) => {
