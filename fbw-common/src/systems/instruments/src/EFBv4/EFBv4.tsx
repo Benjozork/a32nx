@@ -148,7 +148,7 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
     }, true);
   }
 
-  render(): VNode {
+  public render(): VNode {
     return (
       <div class="h-screen w-screen">
         <div ref={this.renderRoot} class="flex h-full w-full flex-row" />

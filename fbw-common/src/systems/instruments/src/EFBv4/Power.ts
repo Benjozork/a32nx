@@ -11,12 +11,12 @@ class Battery {
   private charge: number;
   private lastChangeTimestamp: number;
 
-  constructor(initialCharge: number, lastChangeTimestamp: number) {
+  public constructor(initialCharge: number, lastChangeTimestamp: number) {
     this.charge = initialCharge;
     this.lastChangeTimestamp = lastChangeTimestamp;
   }
 
-  update(absoluteTime: number, powerBeingSupplied: boolean): number {
+  public update(absoluteTime: number, powerBeingSupplied: boolean): number {
     const deltaTs = Math.max(absoluteTime - this.lastChangeTimestamp, 0);
     const batteryDurationSec = powerBeingSupplied
       ? BATTERY_DURATION_CHARGE_MIN * 60
@@ -69,7 +69,7 @@ export class PowerManager {
 
   private readonly powerState = Subject.create(PowerStates.SHUTOFF as PowerStates);
 
-  private isBatteryChargeDischargeBeingSimulated = MappedSubject.create(
+  private readonly isBatteryChargeDischargeBeingSimulated = MappedSubject.create(
     ([batteryLifeEnabled, powerState]) => {
       return powerState === PowerStates.LOADED && batteryLifeEnabled;
     },
@@ -81,7 +81,7 @@ export class PowerManager {
 
   private readonly charge = Subject.create(100);
 
-  constructor(
+  public constructor(
     bus: EventBus,
     private readonly batteryLifeEnabled: Subscribable<boolean>,
   ) {
@@ -104,19 +104,19 @@ export class PowerManager {
     this.powerState.sub((state) => PowerManager.PowerStateSimVar.set(state));
   }
 
-  get power(): Subscribable<PowerStates> {
+  public get power(): Subscribable<PowerStates> {
     return this.powerState;
   }
 
-  get isBatteryCharging(): Subscribable<boolean> {
+  public get isBatteryCharging(): Subscribable<boolean> {
     return this.isCharging;
   }
 
-  get batteryCharge(): Subscribable<number> {
+  public get batteryCharge(): Subscribable<number> {
     return this.charge;
   }
 
-  updateCharge(absoluteTime: number) {
+  private updateCharge(absoluteTime: number) {
     if (!this.isBatteryChargeDischargeBeingSimulated.get()) return;
 
     const newCharge = this.battery.update(absoluteTime, this.isCharging.get());
@@ -131,7 +131,7 @@ export class PowerManager {
     }
   }
 
-  offToLoaded() {
+  public offToLoaded() {
     const shouldWait = this.powerState.get() === PowerStates.SHUTOFF || this.powerState.get() === PowerStates.EMPTY;
     this.powerState.set(PowerStates.LOADING);
 
@@ -144,7 +144,7 @@ export class PowerManager {
     }
   }
 
-  handlePowerButtonPress() {
+  public handlePowerButtonPress() {
     if (this.powerState.get() === PowerStates.STANDBY) {
       this.offToLoaded();
     } else {
