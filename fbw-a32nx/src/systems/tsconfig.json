@@ -28,6 +28,7 @@
       "@flybywiresim/clock": ["../../../fbw-common/src/systems/instruments/src/Clock/index.ts"],
       "@flybywiresim/fbw-sdk": ["../../../fbw-common/src/systems/index.ts"],
       "@flybywiresim/flypad": ["../../../fbw-common/src/systems/instruments/src/EFB/index.ts"],
+      "@flybywiresim/EFBv4": ["../../../fbw-common/src/systems/instruments/src/EFBv4/index.ts"],
       "@flybywiresim/msfs-avionics-common": ["../../../fbw-common/src/systems/instruments/src/MsfsAvionicsCommon/index.ts"],
       "@flybywiresim/navigation-display": ["../../../fbw-common/src/systems/instruments/src/ND/index.ts"],
       "@flybywiresim/oanc": ["../../../fbw-common/src/systems/instruments/src/OANC/index.ts"],
