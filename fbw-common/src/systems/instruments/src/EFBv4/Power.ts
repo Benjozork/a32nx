@@ -1,8 +1,9 @@
 import { EventBus, MappedSubject, MathUtils, SimVarValueType, Subject, Subscribable } from '@microsoft/msfs-sdk';
 
-import { ModalKind, showModal } from 'instruments/src/EFBv4/Components/Modal';
-import { EFBSimvars } from 'instruments/src/EFBv4/EFBSimvarPublisher';
-import { RegisteredSimVar } from '@shared/SimVarUtils';
+import { RegisteredSimVar } from '../../../shared/src/SimVarUtils';
+
+import { EFBSimvars } from './EFBSimvarPublisher';
+import { ModalKind, showModal } from './Components/Modal';
 
 const BATTERY_DURATION_CHARGE_MIN = 180;
 const BATTERY_DURATION_DISCHARGE_MIN = 540;

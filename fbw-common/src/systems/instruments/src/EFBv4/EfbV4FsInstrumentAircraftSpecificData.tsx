@@ -1,4 +1,5 @@
-import { LandingPerformanceCalculator, TakeoffPerformanceCalculator } from '@shared/performance';
+import { TakeoffPerformanceCalculator } from '../../../shared/src/performance/takeoff';
+import { LandingPerformanceCalculator } from '../../../shared/src/performance/landing';
 
 interface PerformanceCalculators {
   takeoff: TakeoffPerformanceCalculator | null;

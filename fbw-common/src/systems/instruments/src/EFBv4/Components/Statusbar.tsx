@@ -1,12 +1,12 @@
 import {
-  ComponentProps,
-  ConsumerSubject,
-  DisplayComponent,
-  FSComponent,
-  MappedSubject,
-  Subject,
-  Subscribable,
-  VNode,
+    ComponentProps,
+    ConsumerSubject,
+    DisplayComponent,
+    FSComponent,
+    MappedSubject,
+    Subject,
+    Subscribable,
+    VNode,
 } from '@microsoft/msfs-sdk';
 
 import { LocalizedString } from '../Shared/translation';
@@ -14,13 +14,13 @@ import { PageEnum } from '../Shared/common';
 import { Switch } from '../Pages/Pages';
 import { EFBSimvars } from '../EFBSimvarPublisher';
 import { AbstractUIView, UIVIew } from '../Shared';
-import { ClientState, SimBridgeClientState } from '@shared/simbridge';
+import { ClientState, SimBridgeClientState } from '../../../../shared/src/simbridge';
 import { SettingsPages } from '../EfbV4FsInstrumentAircraftSpecificData';
-import { NXDataStore } from '@shared/persistence';
 import { TooltipWrapper } from './Tooltip';
 import { Button } from './Button';
 import { TroubleshootingState } from '../State/TroubleshootingState';
 import { getEfbV3Bridge } from '../../EfbBridge/EfbBridge';
+import { NXDataStore } from '../../../../shared/src/persistence';
 
 interface BatteryStatusIconProps extends ComponentProps {
   batteryLevel: Subscribable<number>;

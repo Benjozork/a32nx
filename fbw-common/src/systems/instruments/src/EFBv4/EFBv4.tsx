@@ -25,12 +25,12 @@ import './Assets/bi-icons.css';
 import { TooltipContainer } from './Components/Tooltip';
 import { ModalContainer } from './Components/Modal';
 import { PowerManager, PowerStates } from './Power';
-import { Button } from 'instruments/src/EFBv4/Components/Button';
+import { Button } from './Components/Button';
 
 import { FbwLogo } from './Assets/FbwLogo';
 import { NotificationContainer } from './Components/Notification';
 import { EfbV4FsInstrumentAircraftSpecificData } from './EfbV4FsInstrumentAircraftSpecificData';
-import { NXDataStore } from '@shared/persistence';
+import { NXDataStore } from '../../../shared/src/persistence';
 import { TroubleshootingState } from './State/TroubleshootingState';
 import { getEfbV3Bridge } from '../EfbBridge/EfbBridge';
 

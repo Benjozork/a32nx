@@ -4,7 +4,7 @@ import { EFBv4 } from './EFBv4';
 import { busContext, initializeEventBusContext } from './Contexts';
 import { EFBSimvarPublisher } from './EFBSimvarPublisher';
 import { EfbV4FsInstrumentAircraftSpecificData } from './EfbV4FsInstrumentAircraftSpecificData';
-import { SimBridgeStatePublisher } from '@shared/simbridge/components/SimBridgeStatePublisher';
+import { SimBridgeStatePublisher } from '../../../shared/src/simbridge/components/SimBridgeStatePublisher';
 
 export const EFB_EVENT_BUS = new EventBus();
 
