@@ -17,10 +17,15 @@ export const TroubleshootingContextProvider: React.FC<TroubleshootingContextProp
 
   useEffect(() => {
     let log = [];
+
+    window?.EFB_V4_BRIDGE?.updateTroubleshootingStatus(false);
+
     const sub = eventBus
       .getSubscriber<TroubleshootingEvents>()
       .on('troubleshooting_log_error')
       .handle((err) => {
+        window?.EFB_V4_BRIDGE?.updateTroubleshootingStatus(true);
+
         log = [`${new Date().toISOString()}: ${err}`, ...log];
         setErrorLog(log);
       });

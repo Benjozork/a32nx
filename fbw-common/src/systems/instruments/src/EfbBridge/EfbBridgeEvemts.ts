@@ -17,4 +17,10 @@ export interface EfbV3ControlInterface {
   setActivePage(page: PageEnum.MainPage): void;
 
   openQuickSettings(): void;
+
+  openTroubleshootingPage(): void;
+}
+
+export interface EfbV4ControlInterface {
+  updateTroubleshootingStatus(hasTroubleshootingIssue: boolean): void;
 }

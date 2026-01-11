@@ -12,6 +12,10 @@ export const fileHashesSlice = createSlice({
   reducers: {
     setFileHashMismatches: (state, action: PayloadAction<HashMismatchResult[]>) => {
       state.mismatches = action.payload;
+
+      if (window.EFB_V4_BRIDGE) {
+        window.EFB_V4_BRIDGE.updateTroubleshootingStatus(action.payload.length > 0);
+      }
     },
   },
 });

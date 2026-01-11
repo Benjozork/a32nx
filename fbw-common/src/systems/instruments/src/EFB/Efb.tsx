@@ -28,6 +28,7 @@ import {
   AircraftContext,
   globalSyncedSettings,
   migrateSettings,
+  pathify,
   setAirframeInfo,
   setCabinInfo,
   setFlypadInfo,
@@ -56,7 +57,7 @@ import { EventBus } from '@microsoft/msfs-sdk';
 import { TroubleshootingContextProvider } from './TroubleshootingContext';
 import { checkFileHashes } from './Utils/fileHashes';
 import { setFileHashMismatches } from './Store/features/fileHashes';
-import { EfbV3ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
+import { EfbV3ControlInterface, EfbV4ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
 import { PageEnum } from '../EFBv4';
 import { StatusBar } from './StatusBar/StatusBar';
 
@@ -162,6 +163,8 @@ interface EfbProps {
 declare global {
   interface Window {
     EFB_V3_BRIDGE: EfbV3ControlInterface;
+
+    EFB_V4_BRIDGE: EfbV4ControlInterface;
   }
 }
 
@@ -359,6 +362,7 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
         }
       },
       openQuickSettings: () => setShowQuickControlsPane(true),
+      openTroubleshootingPage: () => history.push(`/settings/${pathify('About')}/${pathify('Troubleshooting')}`),
     };
 
     return () => (window.EFB_V3_BRIDGE = undefined);

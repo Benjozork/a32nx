@@ -55,6 +55,7 @@ module.exports = {
         'theme-unselected': 'rgba(var(--color-unselected), <alpha-value>)',
         'theme-secondary': 'rgba(var(--color-secondary), <alpha-value>)',
         'theme-statusbar': 'rgba(var(--color-statusbar), <alpha-value>)',
+        'theme-statusbar-mismatch': 'rgba(var(--color-statusbar-mismatch), <alpha-value>)',
         'theme-accent': 'rgba(var(--color-accent), <alpha-value>)',
         cyan: {
           DEFAULT: '#00E0FE',

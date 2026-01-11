@@ -19,6 +19,7 @@ import { SettingsPages } from '../EfbV4FsInstrumentAircraftSpecificData';
 import { NXDataStore } from '@shared/persistence';
 import { TooltipWrapper } from './Tooltip';
 import { Button } from './Button';
+import { TroubleshootingState } from '../State/TroubleshootingState';
 
 interface BatteryStatusIconProps extends ComponentProps {
   batteryLevel: Subscribable<number>;
@@ -104,6 +105,8 @@ export class Battery extends DisplayComponent<BatteryProps> {
 interface StatusbarProps extends ComponentProps {
   settingsPages: SettingsPages;
 
+  troubleshootingState: TroubleshootingState;
+
   batteryLevel: Subscribable<number>;
 
   isCharging: Subscribable<boolean>;
@@ -121,6 +124,12 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
   private readonly monthOfYear = ConsumerSubject.create(null, 0);
 
   private readonly dayOfMonth = ConsumerSubject.create(null, 0);
+
+  private readonly rootClass = this.props.troubleshootingState.hasTroubleshootingIssue.map(
+    (hasTroubleshootingIssue) => {
+      return `pointer-events-auto z-30 flex h-10 w-full items-center justify-between ${hasTroubleshootingIssue ? 'bg-theme-statusbar-mismatch' : 'bg-theme-statusbar'} px-6 text-lg font-medium leading-none text-theme-text`;
+    },
+  );
 
   private readonly dayName: LocalizedString = LocalizedString.create('StatusBar.Sun');
 
@@ -189,6 +198,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
     super.onAfterRender(node);
 
     const sub = this.bus.getSubscriber<EFBSimvars>();
+
     this.subscriptions.push(
       this.currentUTC.setConsumer(sub.on('currentUTC')),
       this.currentLocalTime.setConsumer(sub.on('currentLocalTime')),
@@ -197,6 +207,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
       this.dayOfMonth.setConsumer(sub.on('dayOfMonth')),
       this.dayOfWeek.setConsumer(sub.on('dayOfWeek')),
     );
+
     this.subscriptions.push(
       this.dayOfWeek.sub((value) => {
         this.dayName.set(
@@ -239,7 +250,25 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
         ClientState.getInstance().getSimBridgeClientState() === SimBridgeClientState.CONNECTED,
       );
     });
+
+    const root = this.rootRef.instance;
+
+    if (root instanceof HTMLElement) {
+      root.addEventListener('click', this.handleStatusBarClick);
+    }
   }
+
+  private handleStatusBarClick = () => {
+    if (!this.props.troubleshootingState.hasTroubleshootingIssue.get()) {
+      return;
+    }
+
+    if (window.EFB_V3_BRIDGE === undefined) {
+      return;
+    }
+
+    window.EFB_V3_BRIDGE.openTroubleshootingPage();
+  };
 
   public destroy(childFilter?: (child: UIVIew) => boolean) {
     super.destroy(childFilter);
@@ -251,7 +280,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
 
   render(): VNode {
     return (
-      <div class="pointer-events-auto z-30 flex h-10 w-full items-center justify-between bg-theme-statusbar px-6 text-lg font-medium leading-none text-theme-text">
+      <div ref={this.rootRef} class={this.rootClass}>
         <p>
           {this.dayName} {this.monthName} {this.dayOfMonth.map((value) => value.toFixed())}
         </p>

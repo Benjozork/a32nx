@@ -31,11 +31,14 @@ import { FbwLogo } from './Assets/FbwLogo';
 import { NotificationContainer } from './Components/Notification';
 import { EfbV4FsInstrumentAircraftSpecificData } from './EfbV4FsInstrumentAircraftSpecificData';
 import { NXDataStore } from '@shared/persistence';
-import { EfbV3ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
+import { EfbV3ControlInterface, EfbV4ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
+import { TroubleshootingState } from './State/TroubleshootingState';
 
 declare global {
   interface Window {
     EFB_V3_BRIDGE: EfbV3ControlInterface | undefined;
+
+    EFB_V4_BRIDGE: EfbV4ControlInterface | undefined;
   }
 }
 
@@ -49,6 +52,8 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
   private readonly renderRoot = FSComponent.createRef<HTMLDivElement>();
 
   private readonly renderRoot2 = FSComponent.createRef<HTMLDivElement>();
+
+  private readonly troubleshootingState = new TroubleshootingState();
 
   private readonly currentPage = Subject.create(PageEnum.MainPage.Dashboard);
 
@@ -81,6 +86,15 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
       bridge.setActivePage(page);
     });
 
+    // FIXME v4 bridge, remove after no longer needed
+    if (window.EFB_V4_BRIDGE === undefined) {
+      window.EFB_V4_BRIDGE = {
+        updateTroubleshootingStatus: (hasTroubleshootingIssue: boolean): void => {
+          this.troubleshootingState.hasTroubleshootingIssue.set(hasTroubleshootingIssue);
+        },
+      };
+    }
+
     const getComponentFromPowerState = (powerState: PowerStates): VNode => {
       switch (powerState) {
         case PowerStates.SHUTOFF:
@@ -110,6 +124,7 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
             <>
               <Statusbar
                 settingsPages={this.props.aircraftSpecificData.settingsPages}
+                troubleshootingState={this.troubleshootingState}
                 batteryLevel={powerManager.batteryCharge}
                 isCharging={powerManager.isBatteryCharging}
               />

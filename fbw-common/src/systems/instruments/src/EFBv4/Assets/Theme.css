@@ -18,6 +18,7 @@
     --color-unselected: 201, 201, 201;
     --color-accent: 43, 49, 59;
     --color-statusbar: 20, 30, 41;
+    --color-statusbar-mismatch: 78, 0, 0;
 }
 
 :root.theme-dark {
@@ -28,6 +29,7 @@
     --color-unselected: 201, 201, 201;
     --color-accent: 30, 35, 45;
     --color-statusbar: 0, 0, 0;
+    --color-statusbar-mismatch: 78, 0, 0;
 }
 
 :root.theme-light {
@@ -38,4 +40,5 @@
     --color-unselected: 105, 105, 105;
     --color-accent: 208, 208, 208;
     --color-statusbar: 255, 255, 255;
+    --color-statusbar-mismatch: 255, 127, 127;
 }
