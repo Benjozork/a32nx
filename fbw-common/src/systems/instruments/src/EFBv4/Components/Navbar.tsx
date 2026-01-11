@@ -11,7 +11,7 @@ import FbwTail from '../Assets/FBW-Tail.svg';
 import { PageEnum } from '../Shared/common';
 import { Button } from './Button';
 import { twMerge } from 'tailwind-merge';
-import { TooltipWrapper } from 'instruments/src/EFBv4/Components/Tooltip';
+import { TooltipWrapper } from './Tooltip';
 
 interface NavbarProps extends ComponentProps {
   activePage: Subject<number>;

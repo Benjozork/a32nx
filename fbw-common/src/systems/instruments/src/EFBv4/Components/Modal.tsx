@@ -1,10 +1,12 @@
 import { Subject, VNode } from '@microsoft/msfs-sdk';
-import { AbstractUIView } from '../Shared/UIView';
+
 import { FSComponent } from '@microsoft/msfs-sdk';
-import { EFB_EVENT_BUS } from 'instruments/src/EFBv4/EfbV4FsInstrument';
-import { FlypadControlEvents } from 'instruments/src/EFBv4/FlypadControlEvents';
+
+import { AbstractUIView } from '../Shared/UIView';
 import { Button } from './Button';
 import { t } from '../Components/LocalizedText';
+import { EFB_EVENT_BUS } from '../EfbV4FsInstrument';
+import { FlypadControlEvents } from '../FlypadControlEvents';
 
 export enum ModalKind {
   Prompt,

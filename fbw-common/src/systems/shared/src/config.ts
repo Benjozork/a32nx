@@ -7,3 +7,5 @@ export enum ConfigWeatherMap {
   PILOTEDGE = 'pilotedge',
   VATSIM = 'vatsim',
 }
+
+export type MetarSource = 'MSFS' | 'NOAA' | 'PILOTEDGE' | 'VATSIM';

@@ -1,9 +1,10 @@
 import { ArraySubject, FSComponent, MathUtils, Subject, Subscribable, VNode } from '@microsoft/msfs-sdk';
+
 import { AbstractUIView } from '../Shared/UIView';
-import { EFB_EVENT_BUS } from 'instruments/src/EFBv4/EfbV4FsInstrument';
-import { FlypadControlEvents } from 'instruments/src/EFBv4/FlypadControlEvents';
-import { List } from 'instruments/src/EFBv4/Components/List';
 import { v4 } from 'uuid';
+import { FlypadControlEvents } from '../FlypadControlEvents';
+import { EFB_EVENT_BUS } from '../EfbV4FsInstrument';
+import { List } from './List';
 
 export enum NotificationLifetimeKind {
   Indefinite,
@@ -142,7 +143,9 @@ export class NotificationContainer extends AbstractUIView {
       });
     };
 
-    EFB_EVENT_BUS.getSubscriber<FlypadControlEvents>().on('show_notification').handle(handleShowNotification);
+    this.subscriptions.push(
+      EFB_EVENT_BUS.getSubscriber<FlypadControlEvents>().on('show_notification').handle(handleShowNotification),
+    );
 
     let lastUpdate = Date.now();
     setInterval(() => {

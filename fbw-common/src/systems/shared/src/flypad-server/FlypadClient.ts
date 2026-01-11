@@ -3,7 +3,7 @@ import { EventBus, SubEvent, Wait } from '@microsoft/msfs-sdk';
 import { FlypadClientEvents, FlypadServerEvents } from './FlypadEvents';
 import { MetarParserType } from '../../../instruments/src/metarTypes';
 import { Runway } from '../../../instruments/src/EFB/Performance/Data/Runways';
-import { MetarSource } from '../../../instruments/src/EFBv4/FbwUserSettings';
+import { MetarSource } from '../config';
 
 export class FlypadClient {
   private readonly eventSub = this.bus.getSubscriber<FlypadServerEvents>();
