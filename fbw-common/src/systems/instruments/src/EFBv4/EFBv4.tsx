@@ -31,16 +31,8 @@ import { FbwLogo } from './Assets/FbwLogo';
 import { NotificationContainer } from './Components/Notification';
 import { EfbV4FsInstrumentAircraftSpecificData } from './EfbV4FsInstrumentAircraftSpecificData';
 import { NXDataStore } from '@shared/persistence';
-import { EfbV3ControlInterface, EfbV4ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
 import { TroubleshootingState } from './State/TroubleshootingState';
-
-declare global {
-  interface Window {
-    EFB_V3_BRIDGE: EfbV3ControlInterface | undefined;
-
-    EFB_V4_BRIDGE: EfbV4ControlInterface | undefined;
-  }
-}
+import { getEfbV3Bridge } from '../EfbBridge/EfbBridge';
 
 interface EfbProps extends ComponentProps {
   aircraftSpecificData: EfbV4FsInstrumentAircraftSpecificData;
@@ -77,13 +69,7 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
 
     // FIXME v3 bridge, remove after no longer needed
     this.currentPage.sub((page) => {
-      const bridge = window.EFB_V3_BRIDGE;
-
-      if (bridge === undefined) {
-        return;
-      }
-
-      bridge.setActivePage(page);
+      getEfbV3Bridge()?.setActivePage(page);
     });
 
     // FIXME v4 bridge, remove after no longer needed

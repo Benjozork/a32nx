@@ -5,6 +5,8 @@
 import { EventBus } from '@microsoft/msfs-sdk';
 import React, { useContext, useEffect, useState } from 'react';
 import { TroubleshootingEvents } from '../../../shared/src/Troubleshooting';
+import { getEfbV4Bridge } from '../EfbBridge/EfbBridge';
+
 
 const TroubleshootingContext = React.createContext<string[]>(undefined as any);
 
@@ -18,13 +20,13 @@ export const TroubleshootingContextProvider: React.FC<TroubleshootingContextProp
   useEffect(() => {
     let log = [];
 
-    window?.EFB_V4_BRIDGE?.updateTroubleshootingStatus(false);
+    getEfbV4Bridge()?.updateTroubleshootingStatus(false);
 
     const sub = eventBus
       .getSubscriber<TroubleshootingEvents>()
       .on('troubleshooting_log_error')
       .handle((err) => {
-        window?.EFB_V4_BRIDGE?.updateTroubleshootingStatus(true);
+        getEfbV4Bridge()?.updateTroubleshootingStatus(true);
 
         log = [`${new Date().toISOString()}: ${err}`, ...log];
         setErrorLog(log);

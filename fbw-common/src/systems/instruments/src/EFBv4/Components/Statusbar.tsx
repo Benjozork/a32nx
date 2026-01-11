@@ -20,6 +20,7 @@ import { NXDataStore } from '@shared/persistence';
 import { TooltipWrapper } from './Tooltip';
 import { Button } from './Button';
 import { TroubleshootingState } from '../State/TroubleshootingState';
+import { getEfbV3Bridge } from '../../EfbBridge/EfbBridge';
 
 interface BatteryStatusIconProps extends ComponentProps {
   batteryLevel: Subscribable<number>;
@@ -185,13 +186,7 @@ export class Statusbar extends AbstractUIView<StatusbarProps> {
   );
 
   private handleToggleQuickSettings = () => {
-    const bridge = window.EFB_V3_BRIDGE;
-
-    if (bridge === undefined) {
-      return;
-    }
-
-    bridge.openQuickSettings();
+    getEfbV3Bridge()?.openQuickSettings();
   };
 
   public onAfterRender(node: VNode) {
