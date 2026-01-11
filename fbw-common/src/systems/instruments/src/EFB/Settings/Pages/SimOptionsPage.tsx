@@ -1,5 +1,4 @@
-// @ts-strict-ignore
-// Copyright (c) 2023-2024 FlyByWire Simulations
+// Copyright (c) 2023-2025 FlyByWire Simulations
 // SPDX-License-Identifier: GPL-3.0
 
 /* eslint-disable max-len */
@@ -7,6 +6,7 @@ import React, { useContext, useRef, useState } from 'react';
 import Slider from 'rc-slider';
 import {
   DefaultPilotSeatConfig,
+  isMsfs2024,
   PilotSeatConfig,
   usePersistentNumberProperty,
   usePersistentProperty,
@@ -31,7 +31,12 @@ export const SimOptionsPage = () => {
 
   const [defaultBaro, setDefaultBaro] = usePersistentProperty('CONFIG_INIT_BARO_UNIT', 'AUTO');
   const [dynamicRegistration, setDynamicRegistration] = usePersistentProperty('DYNAMIC_REGISTRATION_DECAL', '0');
+
+  // Legacy MSFS2020 flight plan sync
   const [fpSync, setFpSync] = usePersistentProperty('FP_SYNC', 'LOAD');
+
+  const [autoRouteLoad, setAutoRouteLoad] = usePersistentSetting('CONFIG_AUTO_SIM_ROUTE_LOAD');
+
   const [simbridgeRemote, setSimbridgeRemoteStatus] = usePersistentSetting('CONFIG_SIMBRIDGE_REMOTE');
   const [simbridgeIp, setSimbridgeIp] = usePersistentProperty('CONFIG_SIMBRIDGE_IP', 'localhost');
   const [simbridgePort, setSimbridgePort] = usePersistentProperty('CONFIG_SIMBRIDGE_PORT', '8380');
@@ -92,7 +97,7 @@ export const SimOptionsPage = () => {
             </SelectGroup>
           </SettingItem>
 
-          {aircraftContext.settingsPages.sim.msfsFplnSync && (
+          {!isMsfs2024() && aircraftContext.settingsPages.sim.msfsFplnSync && (
             <SettingItem name={t('Settings.SimOptions.SyncMsfsFlightPlan')}>
               <SelectGroup>
                 {fpSyncButtons.map((button) => (
@@ -105,6 +110,12 @@ export const SimOptionsPage = () => {
                   </SelectItem>
                 ))}
               </SelectGroup>
+            </SettingItem>
+          )}
+
+          {isMsfs2024() && (
+            <SettingItem name={t('Settings.SimOptions.AutoLoadMsfsRoute')}>
+              <Toggle value={!!autoRouteLoad} onToggle={(value) => setAutoRouteLoad(value)} />
             </SettingItem>
           )}
 

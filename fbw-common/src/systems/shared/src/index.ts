@@ -32,6 +32,7 @@ export * from './bitFlags';
 export * from './config';
 export * from './failures';
 export * from './flypad-server';
+export * from './hash';
 export * from './localization';
 export * from './logic';
 export * from './MapParameters';

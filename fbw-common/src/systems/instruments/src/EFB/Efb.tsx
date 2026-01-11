@@ -25,6 +25,7 @@ import { distanceTo } from 'msfs-geo';
 import { ErrorBoundary } from 'react-error-boundary';
 import { MemoryRouter as Router } from 'react-router';
 import {
+  AircraftContext,
   globalSyncedSettings,
   migrateSettings,
   setAirframeInfo,
@@ -53,6 +54,8 @@ import { FlyPadPage } from './Settings/Pages/FlyPadPage';
 import { NavigraphAuthProvider } from '../react/navigraph';
 import { EventBus } from '@microsoft/msfs-sdk';
 import { TroubleshootingContextProvider } from './TroubleshootingContext';
+import { checkFileHashes } from './Utils/fileHashes';
+import { setFileHashMismatches } from './Store/features/fileHashes';
 import { EfbV3ControlInterface } from '../EfbBridge/EfbBridgeEvemts';
 import { PageEnum } from '../EFBv4';
 import { StatusBar } from './StatusBar/StatusBar';
@@ -193,6 +196,15 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
   );
 
   const history = useHistory();
+
+  const { hashFile, hashSeed } = useContext(AircraftContext);
+
+  useEffect(() => {
+    // Check the critical file hashes and store the result for later use
+    if (hashFile) {
+      checkFileHashes(hashFile, hashSeed).then((mismatches) => dispatch(setFileHashMismatches(mismatches)));
+    }
+  }, []);
 
   useEffect(() => {
     const remainingDistance = distanceTo({ lat, long }, { lat: arrivingPosLat, long: arrivingPosLong });
