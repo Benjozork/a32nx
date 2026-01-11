@@ -1,11 +1,25 @@
-import { PageEnum } from '../EFBv4/Shared/common';
-
 declare global {
   interface Window {
     EFB_V3_BRIDGE: EfbV3ControlInterface | undefined;
 
     EFB_V4_BRIDGE: EfbV4ControlInterface | undefined;
   }
+}
+
+/**
+ * Common EFB pages across EFBv3 and EFBv4
+ */
+export enum EfbCommonPages {
+  Dashboard,
+  Dispatch,
+  Ground,
+  Performance,
+  Navigation,
+  ATC,
+  Failures,
+  Checklists,
+  Presets,
+  Settings,
 }
 
 /**
@@ -16,7 +30,7 @@ export interface EfbV3ControlInterface {
    * Sets the active page on the EFBv3 instrument
    * @param page The page to set as active
    */
-  setActivePage(page: PageEnum.MainPage): void;
+  setActivePage(page: EfbCommonPages): void;
 
   /**
    * Opens the quick settings on the EFBv3 instrument

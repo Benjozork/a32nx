@@ -69,7 +69,7 @@ export class EFBv4 extends DisplayComponent<EfbProps, [EventBus]> {
 
     // FIXME v3 bridge, remove after no longer needed
     this.currentPage.sub((page) => {
-      getEfbV3Bridge()?.setActivePage(page);
+      getEfbV3Bridge()?.setActivePage(PageEnum.MainPageToCommonPageMap[page]);
     });
 
     // FIXME v4 bridge, remove after no longer needed

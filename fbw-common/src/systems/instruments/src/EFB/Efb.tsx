@@ -57,7 +57,7 @@ import { EventBus } from '@microsoft/msfs-sdk';
 import { TroubleshootingContextProvider } from './TroubleshootingContext';
 import { checkFileHashes } from './Utils/fileHashes';
 import { setFileHashMismatches } from './Store/features/fileHashes';
-import { PageEnum } from '../EFBv4';
+import { EfbCommonPages } from '../EfbBridge/EfbBridge';
 import { StatusBar } from './StatusBar/StatusBar';
 
 // './Assets/Efb.scss' is imported by the aircraft EFB instrument the wraps this file
@@ -318,36 +318,36 @@ export const Efb: React.FC<EfbProps> = ({ aircraftChecklistsProp }) => {
     }
 
     window.EFB_V3_BRIDGE = {
-      setActivePage(page: PageEnum.MainPage) {
+      setActivePage(page: EfbCommonPages) {
         switch (page) {
-          case PageEnum.MainPage.Dashboard:
+          case EfbCommonPages.Dashboard:
             history.push('/dashboard');
             break;
-          case PageEnum.MainPage.Dispatch:
+          case EfbCommonPages.Dispatch:
             history.push('/dispatch');
             break;
-          case PageEnum.MainPage.Ground:
+          case EfbCommonPages.Ground:
             history.push('/ground');
             break;
-          case PageEnum.MainPage.Performance:
+          case EfbCommonPages.Performance:
             history.push('/performance');
             break;
-          case PageEnum.MainPage.Navigation:
+          case EfbCommonPages.Navigation:
             history.push('/navigation');
             break;
-          case PageEnum.MainPage.ATC:
+          case EfbCommonPages.ATC:
             history.push('/atc');
             break;
-          case PageEnum.MainPage.Failures:
+          case EfbCommonPages.Failures:
             history.push('/failures');
             break;
-          case PageEnum.MainPage.Checklists:
+          case EfbCommonPages.Checklists:
             history.push('/checklists');
             break;
-          case PageEnum.MainPage.Presets:
+          case EfbCommonPages.Presets:
             history.push('/presets');
             break;
-          case PageEnum.MainPage.Settings:
+          case EfbCommonPages.Settings:
             history.push('/settings');
             break;
         }

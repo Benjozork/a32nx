@@ -1,3 +1,5 @@
+import { EfbCommonPages } from '../../EfbBridge/EfbBridge';
+
 export namespace PageEnum {
   export enum SwitchIf {
     False,
@@ -16,6 +18,22 @@ export namespace PageEnum {
     Presets,
     Settings,
   }
+
+  /**
+   * Mapping from MainPage to EfbCommonPages
+   */
+  export const MainPageToCommonPageMap: { [key in MainPage]: EfbCommonPages } = {
+    [MainPage.Dashboard]: EfbCommonPages.Dashboard,
+    [MainPage.Dispatch]: EfbCommonPages.Dispatch,
+    [MainPage.Ground]: EfbCommonPages.Ground,
+    [MainPage.Performance]: EfbCommonPages.Performance,
+    [MainPage.Navigation]: EfbCommonPages.Navigation,
+    [MainPage.ATC]: EfbCommonPages.ATC,
+    [MainPage.Failures]: EfbCommonPages.Failures,
+    [MainPage.Checklists]: EfbCommonPages.Checklists,
+    [MainPage.Presets]: EfbCommonPages.Presets,
+    [MainPage.Settings]: EfbCommonPages.Settings,
+  };
 
   export enum ReminderWidgets {
     Weather,
